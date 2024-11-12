@@ -1,15 +1,82 @@
+import ServiceCard from "../components/custom/Services/ServiceCard"
+
+
 const Service = () => {
+
+  const serviceData1 = [
+    {
+      id : 1,
+      title : " 1. Set Your Hourly Rate",
+      description : "Define your hourly rate for transparency and consistency with clients."
+    },
+    {
+      id : 2,
+      title : " 2. Create Service Packages",
+      description : "Set up different service packages (basic, standard, premium) to give clients options."
+    },
+    {
+      id : 3,
+      title : "3. Add Project Highlights",
+      description : "Showcase your previous work to demonstrate your skills and style."
+    }
+  ]
+
+
+  const serviceData2 =[
+    {
+      title : "Attract New Clients",
+      description : "Create a professional display that brings clients directly to you."
+    },{
+      title : "Boost Your Credibility",
+      description : "Establish trust by offering transparent services and pricing."
+    },{
+      title : "Organize Your Offerings",
+      description : "Keep your services, packages, and rates organized in one place."
+    }
+  ]
+
+
+  const serviceData3 = [
+    {
+      title : "Skill Showcase",
+      description : "List your main skills and areas of expertise."
+    },
+    {
+      title : "Project Portfolio",
+      description : "Highlight your best projects with descriptions, images, and links."
+    },
+    {
+      title : "Custom Packages",
+      description : " Define different packages that cater to varying client needs."
+    },
+    {
+      title :"Pricing Tiers",
+      description: " Offer competitive rates to attract clients with various budgets."
+    },
+    {
+      title : "Client Testimonials",
+      description : "Showcase positive feedback from past clients to build credibility."
+    },
+    {
+      title : "Client Testimonials",
+      description : "Showcase positive feedback from past clients to build credibility."
+    },
+    
+  ]
+
+
+
   return (
     <>
       <section className="px-8 py-20 lg:px-32 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-center">
         <h1 class="text-5xl font-extrabold mb-4 animate-fade-in">
           Welcome to Your Services
         </h1>
-        <p class="text-lg text-gray-200 mb-10 animate-fade-in">
+        <p className="text-lg text-gray-200 mb-10 animate-fade-in">
           Showcase your skills, set your hourly rates, create unique packages,
           and attract clients!
         </p>
-        <button class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg text-lg font-semibold animate-fade-in">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg text-lg font-semibold animate-fade-in">
           Let’s Get Started
         </button>
       </section>
@@ -25,32 +92,11 @@ const Service = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:animation-className-name">
-            <h3 className="text-xl font-semibold mb-2">
-              1. Set Your Hourly Rate
-            </h3>
-            <p className="text-gray-400">
-              Define your hourly rate for transparency and consistency with
-              clients.
-            </p>
-          </div>
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:animation-className-name">
-            <h3 className="text-xl font-semibold mb-2">
-              2. Create Service Packages
-            </h3>
-            <p className="text-gray-400">
-              Set up different service packages (basic, standard, premium) to
-              give clients options.
-            </p>
-          </div>
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:animation-className-name">
-            <h3 className="text-xl font-semibold mb-2">
-              3. Add Project Highlights
-            </h3>
-            <p className="text-gray-400">
-              Showcase your previous work to demonstrate your skills and style.
-            </p>
-          </div>
+          {
+            serviceData1.map((data)=> 
+              <ServiceCard key={data.id} title={data.title} description={data.description}/>
+            )
+          }
         </div>
       </section>
       <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
@@ -83,24 +129,12 @@ const Service = () => {
           </p>
         </div>
         <div className="flex flex-col md:flex-row md:space-x-8 space-y-6 md:space-y-0">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-semibold">Attract New Clients</h3>
-            <p className="text-gray-400 mt-2">
-              Create a professional display that brings clients directly to you.
-            </p>
-          </div>
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-semibold">Boost Your Credibility</h3>
-            <p className="text-gray-400 mt-2">
-              Establish trust by offering transparent services and pricing.
-            </p>
-          </div>
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-semibold">Organize Your Offerings</h3>
-            <p className="text-gray-400 mt-2">
-              Keep your services, packages, and rates organized in one place.
-            </p>
-          </div>
+          {
+            serviceData2.map((data,index)=> 
+            
+              <ServiceCard title={data.title} description={data.description} key={index} className="bg-black"/>
+            )
+          }
         </div>
       </section>
 
@@ -115,80 +149,15 @@ const Service = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg animate-slide-up">
-            <h3 className="text-xl font-semibold">Skill Showcase</h3>
-            <p className="text-gray-400 mt-2">
-              List your main skills and areas of expertise.
-            </p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg animate-slide-up">
-            <h3 className="text-xl font-semibold">Project Portfolio</h3>
-            <p className="text-gray-400 mt-2">
-              Highlight your best projects with descriptions, images, and links.
-            </p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg animate-slide-up">
-            <h3 className="text-xl font-semibold">Custom Packages</h3>
-            <p className="text-gray-400 mt-2">
-              Define different packages that cater to varying client needs.
-            </p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg animate-slide-up">
-            <h3 className="text-xl font-semibold">Pricing Tiers</h3>
-            <p className="text-gray-400 mt-2">
-              Offer competitive rates to attract clients with various budgets.
-            </p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg animate-slide-up">
-            <h3 className="text-xl font-semibold">Client Testimonials</h3>
-            <p className="text-gray-400 mt-2">
-              Showcase positive feedback from past clients to build credibility.
-            </p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg animate-slide-up">
-            <h3 className="text-xl font-semibold">Client Testimonials</h3>
-            <p className="text-gray-400 mt-2">
-              Showcase positive feedback from past clients to build credibility.
-            </p>
-          </div>
+         {
+           serviceData3.map((data,index)=> 
+            <ServiceCard title={data.title} description={data.description} key={index}/>
+          )
+         }
         </div>
       </section>
 
-      <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
-        <div className="text-center mb-10">
-          <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-fuchsia-500">
-            Visualize Your Progress
-          </h2>
-          <p className="text-gray-300 mt-4 max-w-2xl mx-auto">
-            Track your services, earnings, and success metrics with interactive
-            charts.
-          </p>
-        </div>
-        <div className="flex justify-center space-x-8">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:animation-className-name">
-            <h3 className="text-xl font-semibold">Monthly Earnings</h3>
-            <img
-              src="https://via.placeholder.com/300x200"
-              alt="Chart Image"
-              className="rounded-lg"
-            />
-          </div>
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:animation-className-name">
-            <h3 className="text-xl font-semibold">Client Engagement</h3>
-            <img
-              src="https://via.placeholder.com/300x200"
-              alt="Chart Image"
-              className="rounded-lg"
-            />
-          </div>
-        </div>
-      </section>
-
+     
       <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-fuchsia-500">
