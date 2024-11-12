@@ -8,9 +8,6 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 
-# Sample in-memory database (use a real database in production)
-# users_db = {}
-
 def get_db_connection():
     conn = psycopg2.connect(
         dbname="NeuraFlow",
