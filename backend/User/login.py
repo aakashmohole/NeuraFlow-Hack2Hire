@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from werkzeug.security import check_password_hash
 from flask_cors import CORS
 import psycopg2
+import jwt
+import datetime
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -17,6 +19,9 @@ def get_db_connection():
     )
     
     return conn
+
+# Secret key for encoding the JWT
+app.config['SECRET_KEY'] = 'asdfghjkl'  # Replace with a strong secret key
 
 # Login endpoint
 @app.route('/login', methods=['POST'])
@@ -45,7 +50,14 @@ def login():
 
         # Check if user exists and password is correct
         if user and check_password_hash(user[6], password):  # Assuming password hash is stored in the 5th column
-            return jsonify({"message": "Login successful"}), 200
+            # Generate JWT token
+            token = jwt.encode({
+                'user_id': user[0],  # assuming user_id is the first column in the users table
+                'email': email,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # Token expires in 1 hour
+            }, app.config['SECRET_KEY'], algorithm="HS256")
+            
+            return jsonify({"message": "Login successful", "token": token}), 200
         else:
             return jsonify({"error": "Invalid email or password"}), 401
 
