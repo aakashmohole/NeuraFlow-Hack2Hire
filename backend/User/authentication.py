@@ -121,5 +121,16 @@ def login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# Logout endpoint
+@app.route('/logout', methods=['POST'])
+def logout():
+    # Create response to clear the token cookie
+    response = make_response(jsonify({"message": "Logout successful"}), 200)
+    
+    # Remove the JWT token by setting the cookie with an empty value and immediate expiration
+    response.set_cookie('token', '', httponly=True, secure=True, expires=0)
+    
+    return response
 if __name__ == '__main__':
     app.run(debug=True)
