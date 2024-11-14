@@ -7,7 +7,7 @@ import datetime
 from connection import get_db_connection  # Import the get_db_connection from connection.py
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, supports_credentials=True)  # Enable CORS for all routes
 
 # Secret key for encoding the JWT
 app.config['SECRET_KEY'] = 'asdfghjkl'  # Replace with a strong secret key
