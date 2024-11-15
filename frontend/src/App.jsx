@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Service from "./pages/Service";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import AuthProvider from "./components/custom/AuthProvider";
+import SingleProject from "./pages/SingleProject";
 
 function App() {
   const router = createBrowserRouter([
@@ -14,9 +16,11 @@ function App() {
     {
       path: "/explore",
       element: (
-        <div className="w-full h-screen bg-slate-950 items-center">
-          <ExploreProjects />
-        </div>
+        <AuthProvider>
+          <div className="w-full h-screen bg-slate-950 items-center">
+            <ExploreProjects />
+          </div>
+        </AuthProvider>
       ),
     },
     {
@@ -30,6 +34,10 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "/project/:id",
+      element: <SingleProject />,
     },
   ]);
   return (
