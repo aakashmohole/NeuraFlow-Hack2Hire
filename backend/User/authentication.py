@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import re
-import jwt
+import jwt  
+import os
 import datetime
 from connection import get_db_connection  # Import the get_db_connection from connection.py
 
@@ -10,7 +11,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)  # Enable CORS for all routes
 
 # Secret key for encoding the JWT
-app.config['SECRET_KEY'] = 'asdfghjkl'  # Replace with a strong secret key
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY") # Replace with a strong secret key
 
 # Validation function for password strength (optional)
 def is_password_strong(password):
@@ -22,7 +23,6 @@ def is_password_strong(password):
     return False
 
 # Registration endpoint
-@app.route('/register', methods=['POST'])
 def register():
     # Get data from request
     data = request.get_json()
@@ -77,7 +77,6 @@ def register():
         return jsonify({"error": str(e)}), 500
 
 # Login endpoint
-@app.route('/login', methods=['POST'])
 def login():
     # Get data from request
     data = request.get_json()
@@ -110,8 +109,28 @@ def login():
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # Token expires in 1 hour
             }, app.config['SECRET_KEY'], algorithm="HS256")
             
+            
+            # Prepare the response
+            user_details = {
+                "id": user[0],
+                "firstname": user[1],
+                "lastname": user[2],
+                "account_type" : user[3],
+                "email" : user[4],
+                "mobile_no": user[5],
+                "profile_photo" : user[7],
+                "country": user[8],
+                "working_domain": user[9],
+                "technical_skills": user[10],
+                "work_experience": user[11],
+                "educational_details": user[12],
+                "hourly_rate": user[13],
+                "social_media_links": user[14]
+            }
+    
+    
             # Create response object and set the JWT as a cookie
-            response = make_response(jsonify({"message": "Login successful"}), 200)
+            response = make_response(jsonify({"message": "Login successful",  "user": user_details}), 200)
             response.set_cookie('token', token, httponly=True, secure=True, max_age=datetime.timedelta(hours=1))  # Set JWT token as cookie
             
             return response
@@ -122,14 +141,16 @@ def login():
         return jsonify({"error": str(e)}), 500
 
 
+
+
 # Logout endpoint
-@app.route('/logout', methods=['POST'])
 def logout():
-    # Create response to clear the token cookie
-    response = make_response(jsonify({"message": "Logout successful"}), 200)
     
     # Remove the JWT token by setting the cookie with an empty value and immediate expiration
     response.set_cookie('token', '', httponly=True, secure=True, expires=0)
+    
+    # Create response to clear the token cookie
+    response = make_response(jsonify({"message": "Logout successful"}), 200)
     
     return response
 if __name__ == '__main__':
