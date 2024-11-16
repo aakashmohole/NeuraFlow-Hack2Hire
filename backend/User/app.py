@@ -38,7 +38,7 @@ def update_user_details_route():
 
 
 # get_user_details Route
-@app.route('/get_user_details', methods=['POST'])
+@app.route('/get_user_details', methods=['GET'])
 def get_user_details_route():
     # Calling the get_user_details function from profile_update.py
     return get_user_details()
