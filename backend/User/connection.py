@@ -8,7 +8,7 @@ load_dotenv()
 # Get the database URL from the .env file
 database_url = os.getenv("DATABASE_URL")
 
-print("Database URL:", database_url)
+# print("Database URL:", database_url)
 
 def get_db_connection():
     try:
