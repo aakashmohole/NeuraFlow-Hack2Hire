@@ -1,13 +1,15 @@
 import jwt
 from flask import Flask, request, jsonify
 from User.authentication import register, login, logout # Assuming these are defined in authentication.py
-from User.profile_update import update_user_details, get_user_details # Assuming these are defined in authentication.py
+from User.profile_update import update_user_details, get_user_details 
 from flask_cors import CORS
+import os 
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # Secret key for encoding/decoding JWT tokens
-app.config['SECRET_KEY'] = 'asdfghjkl'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 # Register Route
 @app.route('/register', methods=['POST'])
