@@ -8,7 +8,7 @@ import os
 CORS(app, supports_credentials=True)
 
 # Secret key for encoding/decoding JWT tokens
-app.config['SECRET_KEY'] = 'asdfghjkl'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY") 
 
 # Register Route
 @app.route('/register', methods=['POST'])
