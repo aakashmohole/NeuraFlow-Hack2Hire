@@ -7,6 +7,7 @@ import os
 import datetime
 from connection import get_db_connection  # Import the get_db_connection from connection.py
 
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)  # Enable CORS for all routes
 
@@ -21,6 +22,18 @@ def is_password_strong(password):
         re.search(r"[!@#$%^&*()_+=\-]", password)):
         return True
     return False
+
+
+
+def decode_jwt_token(token):
+    try:
+        decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        return decoded_token
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
 
 # Registration endpoint
 def register():
@@ -146,12 +159,38 @@ def login():
 # Logout endpoint
 def logout():
     
-    # Remove the JWT token by setting the cookie with an empty value and immediate expiration
-    response.set_cookie('token', '', httponly=True, secure=True, expires=0)
-    
+    token = ""
+
+    # Extracting the token from the Authorization header or cookies
+    auth_header = request.headers.get('Authorization')
+    access_token = request.cookies.get('token')
+
+    print(access_token)
+
+    if not auth_header and not access_token:
+        return jsonify({"error": "Authorization header or token missing"}), 401
+
+    if auth_header:
+        token = auth_header.split(" ")[1] if " " in auth_header else auth_header
+    elif access_token:
+        token = access_token
+
+    # Decode the JWT token
+    decoded_token = decode_jwt_token(token)
+    if not decoded_token:
+        return jsonify({"error": "Invalid or expired token"}), 401
+
+    user_id = decoded_token.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User ID not found in token"}), 400
+
     # Create response to clear the token cookie
-    response = make_response(jsonify({"message": "Logout successful"}), 200)
-    
-    return response
+    res = make_response(jsonify({"message": "Logout successful"}), 200)
+    res.set_cookie('token', '', httponly=True, secure=True, expires=0)
+
+    return res
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

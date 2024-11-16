@@ -34,11 +34,18 @@ def update_user_details():
         return jsonify({"error": "Database connection failed"}), 500
     cur = conn.cursor()
 
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return jsonify({"error": "Authorization header missing"}), 401
+    token= ""
 
-    token = auth_header.split(" ")[1] if " " in auth_header else auth_header
+    auth_header = request.headers.get('Authorization')
+    accessToken  = request.cookies.get('token');
+
+    if not auth_header and not accessToken:
+        return jsonify({"error": "Authorization header or token missing"}), 401
+
+    if auth_header:
+        token = auth_header.split(" ")[1] if " " in auth_header else auth_header
+    elif accessToken:
+        token = accessToken
     decoded_token = decode_jwt_token(token)
     if not decoded_token:
         return jsonify({"error": "Invalid or expired token"}), 401
@@ -163,11 +170,20 @@ def get_user_details():
         return jsonify({"error": "Database connection failed"}), 500
     cur = conn.cursor()
 
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return jsonify({"error": "Authorization header missing"}), 401
+    token= ""
 
-    token = auth_header.split(" ")[1] if " " in auth_header else auth_header
+    auth_header = request.headers.get('Authorization')
+    accessToken  = request.cookies.get('token');
+
+    if not auth_header and not accessToken:
+        return jsonify({"error": "Authorization header or token missing"}), 401
+
+    if auth_header:
+        token = auth_header.split(" ")[1] if " " in auth_header else auth_header
+    elif accessToken:
+        token = accessToken
+
+
     decoded_token = decode_jwt_token(token)
     if not decoded_token:
         return jsonify({"error": "Invalid or expired token"}), 401
