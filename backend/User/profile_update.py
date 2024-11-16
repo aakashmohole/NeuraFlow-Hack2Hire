@@ -1,4 +1,5 @@
 import jwt
+import json
 import os
 from flask import Flask, request, jsonify
 from connection import get_db_connection
@@ -108,7 +109,8 @@ def update_user_details():
         update_values.append(data['hourlyRate'])
     if 'socialMediaLinks' in data:
         update_fields.append("social_media_links = %s")
-        update_values.append(data['socialMediaLinks'])
+        update_values.append(json.dumps(data['socialMediaLinks']))
+
 
     if update_fields:
         update_query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = %s"
@@ -135,7 +137,8 @@ def update_user_details():
         "work_experience": updated_user[11],
         "educational_details": updated_user[12],
         "hourly_rate": updated_user[13],
-        "social_media_links": updated_user[14]
+        "social_media_links": updated_user[14],
+        "connects": updated_user[15]
     }
 
     return jsonify({"message": "User details updated successfully", "user": user_details}), 200
@@ -175,7 +178,8 @@ def get_user_details():
         "work_experience": user[11],
         "educational_details": user[12],
         "hourly_rate": user[13],
-        "social_media_links": user[14]
+        "social_media_links": user[14],
+        "connects": user[15]
     }
 
     return jsonify({"user": user_details}), 200
@@ -244,7 +248,8 @@ def update_profile_photo():
         "work_experience": updated_user[11],
         "educational_details": updated_user[12],
         "hourly_rate": updated_user[13],
-        "social_media_links": updated_user[14]
+        "social_media_links": updated_user[14],
+        "connects": updated_user[15]
     }
 
     return jsonify({"user": user_details}), 200

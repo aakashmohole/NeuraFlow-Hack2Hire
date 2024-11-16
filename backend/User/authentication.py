@@ -138,7 +138,8 @@ def login():
                 "work_experience": user[11],
                 "educational_details": user[12],
                 "hourly_rate": user[13],
-                "social_media_links": user[14]
+                "social_media_links": user[14],
+                "connects": user[15]
             }
     
     
