@@ -46,10 +46,29 @@ def decode_jwt_token(token):
 
 # Endpoint to create a new client project
 def create_project():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Failed to connect to database"}), 500
+
     # Verify the token and extract the user_id
     user_id = verify_token()
     if isinstance(user_id, tuple):  # If `verify_token` returns a tuple, it's an error
         return user_id
+
+    
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+
+
+    #fetch user details from db
+    #then check the user account_type if it is freelancer return error
+    if not user:
+        return jsonify({"error" : "User not found ,Unauthorzed request"});
+
+    if user[3] == "freelancer" :
+        return jsonify({"error" : "Only clients can create project"});
+
 
     # Get data from the request
     data = request.get_json()
@@ -74,13 +93,9 @@ def create_project():
     if price < 5:
         return jsonify({"error": "Price must be at least $5"}), 400
 
-    conn = get_db_connection()
-    if not conn:
-        return jsonify({"error": "Failed to connect to database"}), 500
+  
 
     try:
-        cursor = conn.cursor()
-
         # Insert the project into the clientProject table
         cursor.execute("""
             INSERT INTO clientProjects (
@@ -116,6 +131,11 @@ def get_client_project_details():
     user_id = verify_token()
     if isinstance(user_id, tuple):  # If `verify_token` returns a tuple, it's an error
         return user_id
+
+    
+    #fetch user details from db
+    #then check the user account_type if it is freelancer return error
+
 
     conn = get_db_connection()
     if not conn:
@@ -153,6 +173,57 @@ def get_client_project_details():
         cursor.close()
         conn.close()
 
+
+def get_client_project_by_id(project_id):
+
+    user_id = verify_token()
+    if isinstance(user_id, tuple):  # If `verify_token` returns a tuple, it's an error
+        return user_id
+
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Failed to connect to database"}), 500
+
+    print(project_id)
+
+    try:
+        cursor = conn.cursor()
+
+        # Query to fetch the project by project_id
+        cursor.execute("""
+            SELECT project_id, clientID, domain, title, description, skills, 
+                   proposal_document, project_deadline, work_type, price
+            FROM clientProjects
+            WHERE project_id = %s;
+        """, (project_id,))
+
+        project = cursor.fetchone()
+
+        if not project:
+            return jsonify({"error": "Project not found"}), 404
+
+        # Formatting the project data
+        project_details = {
+            "project_id": project[0],
+            "clientID": project[1],
+            "domain": project[2],
+            "title": project[3],
+            "description": project[4],
+            "skills": project[5],
+            "proposal_document": project[6],
+            "project_deadline": project[7],
+            "work_type": project[8],
+            "price": project[9],
+        }
+
+        return jsonify({"project_details": project_details}), 200
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to fetch project details: {e}"}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
