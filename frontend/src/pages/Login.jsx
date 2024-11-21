@@ -10,10 +10,21 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useNavigate } from "react-router-dom";
 
+import { loginUser } from "../api/userApi";
+import { login } from "../redux/features/authSlice";
+import { useDispatch } from "react-redux";
+
+import { IoEyeOff, IoEye } from "react-icons/io5";
+import { BackgroundBeams } from "../components/ui/Beams";
+
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -24,36 +35,38 @@ const Login = () => {
     resolver: zodResolver(loginUserSchema),
   });
 
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
   const onSubmit = async (d) => {
-    try {
-      setLoading(true);
-      const response = await axios.post("http://127.0.0.1:5000/login", d, {
-        withCredentials: true,
+    const { data, error } = await loginUser(d, setLoading);
+
+    if (data) {
+      console.log(data);
+
+      toast.success(data.message, {
+        autoClose: "1000",
       });
-      console.log(response.status);
-      if (response?.status === 200) {
-        toast.success("Login Successfull", {
-          autoClose: 2000,
-        });
-      }
+
+      dispatch(login(data.user));
+
       setTimeout(() => {
         navigate("/explore");
       }, 1500);
-    } catch (error) {
-      if (error?.response.data.error) {
-        setServerError(error.response.data.error);
-      }
-      console.error(error);
-    } finally {
-      setLoading(false);
-      reset();
     }
+
+    if (error) {
+      setServerError(error);
+    }
+
+    reset();
   };
 
   return (
     <>
       <section className="bg-[#030712] h-screen flex justify-center items-center">
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 z-10">
           <div className="w-full  rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-10 dark:bg-gray-800 dark:border-gray-700 h-full lg:h-[90%]">
             <div className="p-8 space-y-4 md:space-y-6 sm:p-10">
               <div className="text-center mb-4">
@@ -129,7 +142,7 @@ const Login = () => {
                 )}
               </div>
 
-              <div>
+              <div className="relative">
                 <label
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-white dark:text-white ml-14"
@@ -137,7 +150,7 @@ const Login = () => {
                   Password
                 </label>
                 <input
-                  type="password"
+                  type={isPasswordVisible ? "text" : "password"}
                   name="password"
                   id="password"
                   placeholder="••••••••"
@@ -145,6 +158,18 @@ const Login = () => {
                   required=""
                   {...register("password")}
                 />
+                {isPasswordVisible ? (
+                  <IoEyeOff
+                    className="text-white absolute right-14 top-10 cursor-pointer text-xl"
+                    onClick={togglePasswordVisibility}
+                  />
+                ) : (
+                  <IoEye
+                    className="text-white absolute right-14 top-10 cursor-pointer text-xl"
+                    onClick={togglePasswordVisibility}
+                  />
+                )}
+
                 {errors?.passowrd && (
                   <p className="text-red-600 ml-14 mt-2">
                     {errors.passowrd.message}
@@ -187,6 +212,7 @@ const Login = () => {
             </form>
           </div>
         </div>
+        <BackgroundBeams />
       </section>
       <ToastContainer theme="dark" />
     </>

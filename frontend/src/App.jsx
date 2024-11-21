@@ -6,6 +6,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AuthProvider from "./components/custom/AuthProvider";
 import SingleProject from "./pages/SingleProject";
+import FreelancerServices from "./pages/ClientProject";
+import ProfileSection from "./pages/Profile";
 
 function App() {
   const router = createBrowserRouter([
@@ -38,6 +40,18 @@ function App() {
     {
       path: "/project/:id",
       element: <SingleProject />,
+    },
+    {
+      path: "/client",
+      element: <FreelancerServices />,
+    },
+    {
+      path: "/profile",
+      element: (
+        <AuthProvider>
+          <ProfileSection />
+        </AuthProvider>
+      ),
     },
   ]);
   return (

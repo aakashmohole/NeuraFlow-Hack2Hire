@@ -19,6 +19,21 @@ const projectData = [
     appliedFreelancers: 15,
     connectsRequired: 15,
   },
+  {
+    id: 5,
+    title: "Web page design",
+    budget: 50,
+    description:
+      "This project involves designing a visually appealing and highly responsive user interface for an innovative e-commerce application. The goal is to create a seamless and engaging shopping experience for users with features such as personalized product recommendations, smooth navigation, and a modern, clean look that aligns with the latest design trends. Special attention should be paid to mobile responsiveness and intuitive layouts to enhance user retention and conversion rates.",
+    country: "UK",
+    level: "Intermediate",
+    estimatedTime: "1 month",
+    requiredSkills: ["Html", "css", "Javascript", "Responsive Design"],
+    postedBy: "Santosh K",
+    posetdAt: "10-11-2024",
+    appliedFreelancers: 50,
+    connectsRequired: 1,
+  },
   // Add more projects as needed
 ];
 
@@ -89,11 +104,13 @@ export default function SingleProject() {
             <span className="text-green-400">{userConnects}</span>
           </p>
 
-          <p className="mt-4 text-gray-500">
-            When you submit this proposal, you'll have{" "}
-            <strong className="text-white">{remainingConnect}</strong>{" "}
-            remaining.
-          </p>
+          {isSufficentConnect && (
+            <p className="mt-4 text-gray-500">
+              When you submit this proposal, you'll have{" "}
+              <strong className="text-white">{remainingConnect}</strong>{" "}
+              remaining.
+            </p>
+          )}
 
           {!isSufficentConnect && (
             <p className="mt-4 text-red-500">
