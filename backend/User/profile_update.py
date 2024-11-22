@@ -44,7 +44,6 @@ def verify_token():
     return user_id
 
 
-    
 # Decode JWT function
 def decode_jwt_token(token):
     try:
@@ -100,10 +99,10 @@ def update_user_details():
         update_values.append(data['technicalSkills'])
     if 'workExperience' in data:
         update_fields.append("work_experience = %s")
-        update_values.append(data['workExperience'])
+        update_values.append(json.dumps(data['workExperience']))
     if 'educationalDetails' in data:
         update_fields.append("educational_details = %s")
-        update_values.append(data['educationalDetails'])
+        update_values.append(json.dumps(data['educationalDetails']))
     if 'hourlyRate' in data:
         update_fields.append("hourly_rate = %s")
         update_values.append(data['hourlyRate'])
