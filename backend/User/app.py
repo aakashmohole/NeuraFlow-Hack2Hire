@@ -4,6 +4,7 @@ from authentication import register, login, logout # Assuming these are defined 
 from profile_update import update_user_details, get_user_details, update_profile_photo # Assuming these are defined in authentication.py
 from freelancera_applications import apply_for_work
 from client_projects import create_project, get_client_project_details,get_client_project_by_id
+from recommandation_system import recommandation
 from flask_cors import CORS
 app = Flask(__name__)
 import os
@@ -71,6 +72,10 @@ def get_project_details_route():
 @app.route('/get_project_details/<int:project_id>', methods=['GET'])
 def get_project_details_id_route(project_id):
     return get_client_project_by_id(project_id)
+
+@app.route('/recommend', methods=['POST'])
+def recommandation_route(project_id):
+    return recommandation.recommend(project_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
