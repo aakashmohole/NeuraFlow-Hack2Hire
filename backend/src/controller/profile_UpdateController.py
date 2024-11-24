@@ -18,40 +18,40 @@ def update_user_details():
     update_values = []
 
     # Process fields from the request and prepare update query
-    if 'profilePhoto' in data:
+    if 'profile_photo' in data:
         update_fields.append("profile_photo = %s")
-        update_values.append(data['profilePhoto'])
-    if 'firstName' in data:
+        update_values.append(data['profile_photo'])
+    if 'firstname' in data:
         update_fields.append("firstname = %s")
-        update_values.append(data['firstName'])
+        update_values.append(data['firstname'])
     # ... Add other fields as needed
-    if 'lastName' in data:
+    if 'lastname' in data:
         update_fields.append("lastname = %s")
-        update_values.append(data['lastName'])
-    if 'mobileNo' in data:
+        update_values.append(data['lastname'])
+    if 'mobile_no' in data:
         update_fields.append("mobile_no = %s")
-        update_values.append(data['mobileNo'])
+        update_values.append(data['mobile_no'])
     if 'country' in data:
         update_fields.append("country = %s")
         update_values.append(data['country'])
-    if 'workingDomain' in data:
+    if 'working_domain' in data:
         update_fields.append("working_domain = %s")
-        update_values.append(data['workingDomain'])
-    if 'technicalSkills' in data:
+        update_values.append(data['working_domain'])
+    if 'technical_skills' in data:
         update_fields.append("technical_skills = %s")
-        update_values.append(data['technicalSkills'])
-    if 'workExperience' in data:
+        update_values.append(data['technical_skills'])
+    if 'work_experience' in data:
         update_fields.append("work_experience = %s")
-        update_values.append(json.dumps(data['workExperience']))
-    if 'educationalDetails' in data:
+        update_values.append(json.dumps(data['work_experience']))
+    if 'educational_details' in data:
         update_fields.append("educational_details = %s")
-        update_values.append(json.dumps(data['educationalDetails']))
-    if 'hourlyRate' in data:
+        update_values.append(json.dumps(data['educational_details']))
+    if 'hourly_rate' in data:
         update_fields.append("hourly_rate = %s")
-        update_values.append(data['hourlyRate'])
-    if 'socialMediaLinks' in data:
+        update_values.append(data['hourly_rate'])
+    if 'social_media_links' in data:
         update_fields.append("social_media_links = %s")
-        update_values.append(json.dumps(data['socialMediaLinks']))
+        update_values.append(json.dumps(data['social_media_links']))
     
     if update_fields:
         update_query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = %s"
@@ -94,7 +94,7 @@ def update_profile_photo():
     if not user:
         return jsonify({"error": error}), 404
     
-    file_data = request.files['profilePhoto']
+    file_data = request.files['profile_photo']
     photo_url, error = upload_profile_photo(file_data)
     if error:
         return jsonify({"error": error}), 500

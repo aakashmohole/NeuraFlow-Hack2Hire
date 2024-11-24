@@ -16,8 +16,9 @@ app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Replace with a strong secr
 def apply_for_work_controller():
     # Verify the token and extract the user_id
     user_id = verify_token()
-    if isinstance(user_id, tuple):  # If `verify_token` returns a tuple, it's an error
-        return jsonify(user_id), 401  # Return error message and HTTP status code
+    # if isinstance(user_id, tuple):  # If `verify_token` returns a tuple, it's an error
+    #     return jsonify(user_id), 401  # Return error message and HTTP status code
+
 
     # Get data from the request
     data = request.get_json()
