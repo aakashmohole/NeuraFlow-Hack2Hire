@@ -2,9 +2,9 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from utils.authentication import login, logout, register
-from controller.profile_UpdateController import get_user_details, update_user_details, update_profile_photo
-from utils.connection import get_db_connection
-
+from controller.profile_UpdateController import get_user_details, update_profile_photo, update_user_details
+from controller.client_ProjectsController import create_client_project, get_client_projects_controller, get_client_project_by_id__controller
+from controller.freelancer_ApplicationsController import apply_for_work_controller
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -30,10 +30,43 @@ def logout_route():
     # Calling the Logout function from authentication.py
     return logout()
 
-# Routes
-app.route('/get_user', methods=['GET'])(get_user_details)
-app.route('/update_user', methods=['POST'])(update_user_details)
-app.route('/update_profile_photo', methods=['POST'])(update_profile_photo)
+
+@app.route('/get_user_details', methods=['GET'])
+def get_user_details_route():
+    # Calling the Logout function from authentication.py
+    return get_user_details()
+
+@app.route('/update_user_details', methods=['POST'])
+def update_user_details_route():
+    # Calling the Logout function from authentication.py
+    return update_user_details()
+
+@app.route('/update_profile_photo', methods=['POST'])
+def update_profile_photo_route():
+    # Calling the Logout function from authentication.py
+    return update_profile_photo()
+
+@app.route('/create_client_project', methods=['POST'])
+def create_client_project_route():
+    # Calling the Logout function from authentication.py
+    return create_client_project()
+
+
+@app.route('/get_client_projects', methods=['GET'])
+def get_client_projects_route():
+    # Calling the Logout function from authentication.py
+    return get_client_projects_controller()
+
+@app.route('/get_client_project_by_id/<int:project_id>', methods=['GET'])
+def get_client_project_by_id_route(project_id):
+    # Calling the controller and passing the project_id
+    return get_client_project_by_id__controller(project_id)
+
+@app.route('/apply_for_work', methods=['POST'])
+def apply_for_work_controller_route():
+    # Calling the Logout function from authentication.py
+    return apply_for_work_controller()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

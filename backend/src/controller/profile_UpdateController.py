@@ -1,84 +1,143 @@
+import jwt
 from flask import jsonify, request
-from models.profile_update import UserModel
+from models.profile_update_model import get_user_from_db, update_user_in_db, upload_profile_photo, fetch_user_by_id
 from utils.verify_token import verify_token
-import cloudinary.uploader
 import json
 
-def get_user_details():
-    user_id = verify_token()
-    if not user_id:
-        return jsonify({"error": "User ID not found in token"}), 400
-
-    user, error = UserModel.get_user_by_id(user_id)
-    if error:
-        return jsonify({"error": error}), 500
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-
-    return jsonify({"user": UserModel.format_user(user)}), 200
-
-
 def update_user_details():
-    user_id = verify_token()
+    user_id, error = verify_token()  # No need for app parameter here
     if not user_id:
-        return jsonify({"error": "User ID not found in token"}), 400
-
+        return jsonify({"error": error}), 401
+    
     data = request.json
-    updates = {}
+    user, error = get_user_from_db(user_id)
+    if not user:
+        return jsonify({"error": error}), 404
+    
+    update_fields = []
+    update_values = []
 
-    fields = {
-        'profilePhoto': 'profile_photo',
-        'firstName': 'firstname',
-        'lastName': 'lastname',
-        'mobileNo': 'mobile_no',
-        'country': 'country',
-        'workingDomain': 'working_domain',
-        'technicalSkills': 'technical_skills',
-        'workExperience': 'work_experience',
-        'educationalDetails': 'educational_details',
-        'hourlyRate': 'hourly_rate',
-        'socialMediaLinks': 'social_media_links',
-    }
-
-    for key, db_field in fields.items():
-        if key in data:
-            updates[db_field] = json.dumps(data[key]) if isinstance(data[key], dict) else data[key]
-
-    if updates:
-        error = UserModel.update_user(user_id, updates)
+    # Process fields from the request and prepare update query
+    if 'profilePhoto' in data:
+        update_fields.append("profile_photo = %s")
+        update_values.append(data['profilePhoto'])
+    if 'firstName' in data:
+        update_fields.append("firstname = %s")
+        update_values.append(data['firstName'])
+    # ... Add other fields as needed
+    if 'lastName' in data:
+        update_fields.append("lastname = %s")
+        update_values.append(data['lastName'])
+    if 'mobileNo' in data:
+        update_fields.append("mobile_no = %s")
+        update_values.append(data['mobileNo'])
+    if 'country' in data:
+        update_fields.append("country = %s")
+        update_values.append(data['country'])
+    if 'workingDomain' in data:
+        update_fields.append("working_domain = %s")
+        update_values.append(data['workingDomain'])
+    if 'technicalSkills' in data:
+        update_fields.append("technical_skills = %s")
+        update_values.append(data['technicalSkills'])
+    if 'workExperience' in data:
+        update_fields.append("work_experience = %s")
+        update_values.append(json.dumps(data['workExperience']))
+    if 'educationalDetails' in data:
+        update_fields.append("educational_details = %s")
+        update_values.append(json.dumps(data['educationalDetails']))
+    if 'hourlyRate' in data:
+        update_fields.append("hourly_rate = %s")
+        update_values.append(data['hourlyRate'])
+    if 'socialMediaLinks' in data:
+        update_fields.append("social_media_links = %s")
+        update_values.append(json.dumps(data['socialMediaLinks']))
+    
+    if update_fields:
+        update_query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = %s"
+        update_values.append(user_id)
+        error = update_user_in_db(user_id, update_query, update_values)
         if error:
             return jsonify({"error": error}), 500
 
-    user, error = UserModel.get_user_by_id(user_id)
-    if error:
-        return jsonify({"error": error}), 500
-    return jsonify({"message": "User details updated successfully", "user": UserModel.format_user(user)}), 200
+    user, error = get_user_from_db(user_id)
+    if not user:
+        return jsonify({"error": error}), 404
+    
+    user_details = {
+        "id": user[0],
+        "firstname": user[1],
+        "lastname": user[2],
+        "account_type": user[3],
+        "email": user[4],
+        "mobile_no": user[5],
+        "profile_photo": user[7],
+        "country": user[8],
+        "working_domain": user[9],
+        "technical_skills": user[10],
+        "work_experience": user[11],
+        "educational_details": user[12],
+        "hourly_rate": user[13],
+        "social_media_links": user[14],
+        "connects": user[15]
+    }
+
+    return jsonify({"message": "User details updated successfully", "user": user_details}), 200
 
 
 def update_profile_photo():
-    user_id = verify_token()
+    user_id, error = verify_token()  # No need for app parameter here
     if not user_id:
-        return jsonify({"error": "User ID not found in token"}), 400
+        return jsonify({"error": error}), 401
+    
+    user, error = get_user_from_db(user_id)
+    if not user:
+        return jsonify({"error": error}), 404
+    
+    file_data = request.files['profilePhoto']
+    photo_url, error = upload_profile_photo(file_data)
+    if error:
+        return jsonify({"error": error}), 500
+    
+    update_query = "UPDATE users SET profile_photo = %s WHERE id = %s"
+    error = update_user_in_db(user_id, update_query, (photo_url, user_id))
+    if error:
+        return jsonify({"error": error}), 500
+    
+    user, error = get_user_from_db(user_id)
+    if not user:
+        return jsonify({"error": error}), 404
+    
+    user_details = {
+        "id": user[0],
+        "firstname": user[1],
+        "lastname": user[2],
+        "account_type": user[3],
+        "email": user[4],
+        "mobile_no": user[5],
+        "profile_photo": user[7],
+        "country": user[8],
+        "working_domain": user[9],
+        "technical_skills": user[10],
+        "work_experience": user[11],
+        "educational_details": user[12],
+        "hourly_rate": user[13],
+        "social_media_links": user[14],
+        "connects": user[15]
+    }
 
-    photo = request.files.get('profilePhoto')
-    if not photo:
-        return jsonify({"error": "No profile photo uploaded"}), 400
+    return jsonify({"user": user_details}), 200
 
-    try:
-        upload_result = cloudinary.uploader.upload(photo, folder="profilePhoto")
-        photo_url = upload_result.get('secure_url')
 
-        if not photo_url:
-            return jsonify({"error": "Failed to upload profile photo"}), 500
+def get_user_details():
+    user_id, error = verify_token()  # No need for app parameter here
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
 
-        error = UserModel.save_profile_photo(user_id, photo_url)
-        if error:
-            return jsonify({"error": error}), 500
+    user_details = fetch_user_by_id(user_id)
+    if not user_details:
+        return jsonify({"error": "User not found"}), 404
+    if isinstance(user_details, tuple) and user_details[1] == 500:
+        return jsonify(user_details[0]), 500
 
-        user, error = UserModel.get_user_by_id(user_id)
-        if error:
-            return jsonify({"error": error}), 500
-
-        return jsonify({"user": UserModel.format_user(user)}), 200
-    except Exception as e:
-        return jsonify({"error": f"Unexpected error occurred: {str(e)}"}), 500
+    return jsonify({"user": user_details}), 200
