@@ -87,7 +87,7 @@ def fetch_user_data():
 
     
 # Load the dataset
-df = pd.read_csv('./dataset.csv')
+df = pd.read_csv('C://Users//Aakash//Desktop//NeuraFlow-Hack2Hire//backend//User//recommandation_system//dataset.csv')
 
 # Fetch user-specific data
 domains, work_types, prices, error = fetch_user_data()
@@ -118,7 +118,7 @@ else:
 features = np.hstack((encoded_skills.toarray(), scaled_numerical))
 
 # Load the pre-trained KMeans model
-with open('model.pkl', 'rb') as model_file:
+with open('C://Users//Aakash//Desktop//NeuraFlow-Hack2Hire//backend//User//recommandation_system//model.pkl', 'rb') as model_file:
     kmeans_model = pickle.load(model_file)
     
 def recommend_projects(domain, freelancer_type, budget=None, top_n=5):
