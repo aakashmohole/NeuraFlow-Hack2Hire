@@ -10,10 +10,10 @@ app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Replace with your actual s
 
 
 def create_client_project():
-    user_id, error = verify_token()
-    if error:
-        return jsonify({"error": error}), 401
-
+    user_id = verify_token()
+    if not user_id:
+        return jsonify({"error": "User not found"}), 401
+    
     data = request.get_json()
     domain = data.get('domain')
     title = data.get('title')
@@ -33,36 +33,36 @@ def create_client_project():
     if price < 5:
         return jsonify({"error": "Price must be at least $5"}), 400
 
-    project_id, error = create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price)
+    project_id= create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price)
     
-    if error:
-        return jsonify({"error": error}), 500
+    if not project_id:
+        return jsonify({"error": "No details found"}), 500
     
     return jsonify({"message": "Project created successfully", "project_id": project_id}), 201
 
 
 
 def get_client_projects_controller():
-    user_id, error = verify_token()
-    if error:
-        return jsonify({"error": error}), 401
+    user_id = verify_token()
+    if not user_id:
+        return jsonify({"error": "User not found"}), 401
 
-    projects, error = get_client_projects(user_id)
-    if error:
-        return jsonify({"error": error}), 500
+    projects = get_client_projects(user_id)
+    if not projects:
+        return jsonify({"error": "No projects found"}), 500
     
     return jsonify(projects), 200
 
 
 
 def get_client_project_by_id__controller(project_id):
-    user_id, error = verify_token()
-    if error:
-        return jsonify({"error": error}), 401
-
-    project_details, error = get_client_project_by_id(project_id)
-    if error:
-        return jsonify({"error": error}), 500
+    user_id = verify_token()
+    if not user_id:
+        return jsonify({"error": "User not found"}), 401
+    
+    project_details = get_client_project_by_id(project_id)
+    if not project_details:
+        return jsonify({"error": "No project details found"}), 500
     
     return jsonify({"project_details": project_details}), 200
 

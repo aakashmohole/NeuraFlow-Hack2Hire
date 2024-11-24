@@ -4,7 +4,7 @@ from utils.connection import get_db_connection
 def create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price):
     conn = get_db_connection()
     if not conn:
-        return None, "Failed to connect to database"
+        return   "Failed to connect to database"
 
     cursor = conn.cursor()
     try:
@@ -19,10 +19,10 @@ def create_project(user_id, domain, title, description, skills, proposal_documen
         project_id = cursor.fetchone()[0]
         conn.commit()
 
-        return project_id, None
+        return project_id,  
     except Exception as e:
         conn.rollback()
-        return None, f"Failed to create project: {str(e)}"
+        return   f"Failed to create project: {str(e)}"
     finally:
         cursor.close()
         conn.close()
@@ -31,7 +31,7 @@ def create_project(user_id, domain, title, description, skills, proposal_documen
 def get_client_projects(user_id):
     conn = get_db_connection()
     if not conn:
-        return None, "Failed to connect to database"
+        return   "Failed to connect to database"
 
     try:
         cursor = conn.cursor()
@@ -53,9 +53,9 @@ def get_client_projects(user_id):
                 "title": project[9]
             })
 
-        return project_list, None
+        return project_list,  
     except Exception as e:
-        return None, f"Failed to retrieve projects: {str(e)}"
+        return   f"Failed to retrieve projects: {str(e)}"
     finally:
         cursor.close()
         conn.close()
@@ -64,7 +64,7 @@ def get_client_projects(user_id):
 def get_client_project_by_id(project_id):
     conn = get_db_connection()
     if not conn:
-        return None, "Failed to connect to database"
+        return   "Failed to connect to database"
 
     try:
         cursor = conn.cursor()
@@ -78,7 +78,7 @@ def get_client_project_by_id(project_id):
         project = cursor.fetchone()
 
         if not project:
-            return None, "Project not found"
+            return   "Project not found"
 
         project_details = {
             "project_id": project[0],
@@ -93,9 +93,9 @@ def get_client_project_by_id(project_id):
             "price": project[9],
         }
 
-        return project_details, None
+        return project_details,  
     except Exception as e:
-        return None, f"Failed to fetch project details: {str(e)}"
+        return   f"Failed to fetch project details: {str(e)}"
     finally:
         cursor.close()
         conn.close()

@@ -5,14 +5,14 @@ from utils.verify_token import verify_token
 import json
 
 def update_user_details():
-    user_id, error = verify_token()  # No need for app parameter here
+    user_id = verify_token()  # No need for app parameter here
     if not user_id:
-        return jsonify({"error": error}), 401
+        return jsonify({"error": "Unauthrized request"}), 401
     
     data = request.json
-    user, error = get_user_from_db(user_id)
+    user = get_user_from_db(user_id)
     if not user:
-        return jsonify({"error": error}), 404
+        return jsonify({"error": "Unauthrized request"}), 404
     
     update_fields = []
     update_values = []
@@ -52,6 +52,9 @@ def update_user_details():
     if 'social_media_links' in data:
         update_fields.append("social_media_links = %s")
         update_values.append(json.dumps(data['social_media_links']))
+    if 'bio' in data:
+        update_fields.append("bio = %s")
+        update_values.append(data['bio'])
     
     if update_fields:
         update_query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = %s"
@@ -60,9 +63,9 @@ def update_user_details():
         if error:
             return jsonify({"error": error}), 500
 
-    user, error = get_user_from_db(user_id)
+    user = get_user_from_db(user_id)
     if not user:
-        return jsonify({"error": error}), 404
+        return jsonify({"error": "Data not found"}), 404
     
     user_details = {
         "id": user[0],
@@ -79,34 +82,37 @@ def update_user_details():
         "educational_details": user[12],
         "hourly_rate": user[13],
         "social_media_links": user[14],
-        "connects": user[15]
+        "connects": user[15],
+        "bio": user[16]
     }
 
     return jsonify({"message": "User details updated successfully", "user": user_details}), 200
 
 
 def update_profile_photo():
-    user_id, error = verify_token()  # No need for app parameter here
+    user_id  = verify_token()  # No need for app parameter here
     if not user_id:
-        return jsonify({"error": error}), 401
+        return jsonify({"error": "Unauthrized request"}), 401
     
-    user, error = get_user_from_db(user_id)
+    user  = get_user_from_db(user_id)
     if not user:
-        return jsonify({"error": error}), 404
+        return jsonify({"error": "User not found"}), 404
     
     file_data = request.files['profile_photo']
-    photo_url, error = upload_profile_photo(file_data)
-    if error:
-        return jsonify({"error": error}), 500
+    if not file_data:
+        return jsonify({"error" : "Profile photo required"})
+    photo_url  = upload_profile_photo(file_data)
+    if not photo_url:
+        return jsonify({"error": "Failed to update photo"}), 500
     
     update_query = "UPDATE users SET profile_photo = %s WHERE id = %s"
     error = update_user_in_db(user_id, update_query, (photo_url, user_id))
     if error:
         return jsonify({"error": error}), 500
     
-    user, error = get_user_from_db(user_id)
+    user  = get_user_from_db(user_id)
     if not user:
-        return jsonify({"error": error}), 404
+        return jsonify({"error": "User not found"}), 404
     
     user_details = {
         "id": user[0],
@@ -123,14 +129,15 @@ def update_profile_photo():
         "educational_details": user[12],
         "hourly_rate": user[13],
         "social_media_links": user[14],
-        "connects": user[15]
+        "connects": user[15],
+        "bio": user[16]
     }
 
     return jsonify({"user": user_details}), 200
 
 
 def get_user_details():
-    user_id, error = verify_token()  # No need for app parameter here
+    user_id  = verify_token()  # No need for app parameter here
     if not user_id:
         return jsonify({"error": "Unauthorized"}), 401
 

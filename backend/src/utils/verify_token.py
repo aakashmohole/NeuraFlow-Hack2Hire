@@ -13,9 +13,9 @@ def decode_jwt_token(token):
         decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
         return decoded_token
     except jwt.ExpiredSignatureError:
-        return None
+        raise Exception("Token has expired")
     except jwt.InvalidTokenError:
-        return None
+        raise Exception("Invalid token")
 
 
 # Function to get token of logged-in user
@@ -27,7 +27,7 @@ def verify_token():
     accessToken = request.cookies.get('token')
 
     if not auth_header and not accessToken:
-        return None, "Authorization header or token missing"
+        raise Exception("Authorization header or token missing")
 
     # Extract token from header or cookies
     if auth_header:
@@ -37,24 +37,22 @@ def verify_token():
 
     # Decode token
     decoded_token = decode_jwt_token(token)
-    if not decoded_token:
-        return None, "Invalid or expired token"
 
     user_id = decoded_token.get('user_id')
     if not user_id:
-        return None, "User ID not found in token"
+        raise Exception("User ID not found in token")
 
-    return user_id, None  # Return user_id and no error
+    return user_id
 
 
 @app.route('/protected', methods=['GET'])
 def protected_route():
-    user_id, error = verify_token()
-    if not user_id:
-        return jsonify({"error": error}), 401
-    
-    # Proceed with your logic (e.g., fetching user data)
-    return jsonify({"message": f"Welcome, user {user_id}!"}), 200
+    try:
+        user_id = verify_token()  # This will raise an exception if there's any error
+        # Proceed with your logic (e.g., fetching user data)
+        return jsonify({"message": f"Welcome, user {user_id}!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 401
 
 
 if __name__ == '__main__':

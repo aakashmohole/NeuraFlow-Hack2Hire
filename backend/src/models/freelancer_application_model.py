@@ -2,6 +2,10 @@ from utils.connection import get_db_connection
 
 # Function to apply for work and handle database logic
 def apply_for_work(user_id, cover_letter, time_to_complete):
+    
+    if not isinstance(user_id, int):
+        return {"error": "Invalid user ID provided"}, 400
+
     conn = get_db_connection()
     if not conn:
         return {"error": "Failed to connect to database"}, 500

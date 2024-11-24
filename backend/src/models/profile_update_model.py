@@ -14,7 +14,7 @@ cloudinary.config(
 def get_user_from_db(user_id):
     conn = get_db_connection()
     if not conn:
-        return None, "Database connection failed"
+        return "Database connection failed"
     
     cur = conn.cursor()
     cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
@@ -23,9 +23,9 @@ def get_user_from_db(user_id):
     conn.close()
     
     if not user:
-        return None, "User not found"
+        return "User not found"
     
-    return user, None
+    return user
 
 
 def update_user_in_db(user_id, update_query, update_values):
@@ -45,11 +45,11 @@ def update_user_in_db(user_id, update_query, update_values):
 def upload_profile_photo(file_data):
     try:
         upload_result = cloudinary.uploader.upload(file_data, folder="profilePhoto")
-        return upload_result.get('secure_url'), None
+        return upload_result.get('secure_url')
     except cloudinary.exceptions.Error as cloud_error:
-        return None, f"Cloudinary upload failed: {str(cloud_error)}"
+        return f"Cloudinary upload failed: {str(cloud_error)}"
     except Exception as e:
-        return None, f"Unexpected error occurred during upload: {str(e)}"
+        return f"Unexpected error occurred during upload: {str(e)}"
 
 def fetch_user_by_id(user_id):
     conn = get_db_connection()
@@ -78,6 +78,7 @@ def fetch_user_by_id(user_id):
             "hourly_rate": user[13],
             "social_media_links": user[14],
             "connects": user[15],
+            "bio": user[16]
         }
         return user_details
     except Exception as e:
