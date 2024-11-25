@@ -19,11 +19,9 @@ def get_user_recommendations():
             return jsonify({"error": "User details not found"}), 404
 
         domain = user_details.get("domain")
-        work_type = user_details.get("work_type")
-        rate = user_details.get("rate")
-
+        
         # Pass the details to the recommendation model
-        recommendations = get_recommendations(domain, work_type, rate)
+        recommendations = get_recommendations(domain)
         if not recommendations:
             return jsonify({"message": "No recommendations found"}), 200
 
