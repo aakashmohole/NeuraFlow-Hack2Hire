@@ -96,6 +96,9 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
+    conn = None
+    cur = None
+    
     # Validate input
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
@@ -110,8 +113,8 @@ def login():
         user = cur.fetchone()
 
         # Close the database connection
-        cur.close()
-        conn.close()
+        # cur.close()
+        # conn.close()
 
         # Check if user exists and password is correct
         if user and check_password_hash(user[6], password):  # Assuming password hash is stored in the 6th column
@@ -154,6 +157,12 @@ def login():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+    finally:
+        # Close the cursor and connection safely
+        if cur is not None:
+            cur.close()
+        if conn is not None:
+            conn.close()
 
 
 

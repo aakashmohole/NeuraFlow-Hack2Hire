@@ -1,7 +1,7 @@
 from utils.connection import get_db_connection
 
 # Function to create a new client project
-def create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price):
+def create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price, connects, level):
     conn = get_db_connection()
     if not conn:
         return   "Failed to connect to database"
@@ -11,10 +11,10 @@ def create_project(user_id, domain, title, description, skills, proposal_documen
         cursor.execute("""
             INSERT INTO clientProjects (
                 clientID, domain, title, description, skills, proposal_document, 
-                project_deadline, work_type, price
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                project_deadline, work_type, price, connects, level
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING project_id;
-        """, (user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price))
+        """, (user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price, connects, level))
 
         project_id = cursor.fetchone()[0]
         conn.commit()
@@ -50,7 +50,9 @@ def get_client_projects(user_id):
                 "work_type": project[6],
                 "price": project[7],
                 "project_deadline": project[8],
-                "title": project[9]
+                "title": project[9],
+                "connects": project[10],
+                "level": project[11]
             })
 
         return project_list,  
@@ -91,6 +93,8 @@ def get_client_project_by_id(project_id):
             "project_deadline": project[7],
             "work_type": project[8],
             "price": project[9],
+            "connects": project[10],
+            "level": project[11]
         }
 
         return project_details,  

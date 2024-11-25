@@ -5,6 +5,9 @@ from utils.authentication import login, logout, register
 from controller.profile_UpdateController import get_user_details, update_profile_photo, update_user_details
 from controller.client_ProjectsController import create_client_project, get_client_projects_controller, get_client_project_by_id__controller
 from controller.freelancer_ApplicationsController import apply_for_work_controller
+from controller.event_RegistrationController import register_event
+from controller.recommandationController import get_user_recommendations
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -23,13 +26,11 @@ def login_route():
     # Calling the login function from authentication.py
     return login()
 
-
 # Logout Route
 @app.route('/logout', methods=['POST'])
 def logout_route():
     # Calling the Logout function from authentication.py
     return logout()
-
 
 @app.route('/get_user_details', methods=['GET'])
 def get_user_details_route():
@@ -51,7 +52,6 @@ def create_client_project_route():
     # Calling the Logout function from authentication.py
     return create_client_project()
 
-
 @app.route('/get_client_projects', methods=['GET'])
 def get_client_projects_route():
     # Calling the Logout function from authentication.py
@@ -67,6 +67,16 @@ def apply_for_work_controller_route():
     # Calling the Logout function from authentication.py
     return apply_for_work_controller()
 
+
+@app.route('/event_registration', methods=['POST'])
+def event_registration_route():
+    # Calling the Logout function from authentication.py
+    return register_event()
+
+@app.route('/get_user_recommendations', methods=['GET'])
+def get_user_recommendations_route():
+    # Calling the Logout function from authentication.py
+    return get_user_recommendations()
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -23,8 +23,10 @@ def create_client_project():
     project_deadline = data.get('project_deadline')
     work_type = data.get('work_type')
     price = data.get('price')
+    connects = data.get('connects')
+    level = data.get('level')
 
-    if not all([domain, title, description, skills, project_deadline, work_type, price]):
+    if not all([domain, title, description, skills, project_deadline, work_type, price, connects, level]):
         return jsonify({"error": "Missing required fields"}), 400
 
     if work_type not in ['Hourly Rate', 'Fixed Rate']:
@@ -33,7 +35,7 @@ def create_client_project():
     if price < 5:
         return jsonify({"error": "Price must be at least $5"}), 400
 
-    project_id= create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price)
+    project_id= create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price, connects, level)
     
     if not project_id:
         return jsonify({"error": "No details found"}), 500
