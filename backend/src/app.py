@@ -7,7 +7,7 @@ from controller.client_ProjectsController import create_client_project, get_clie
 from controller.freelancer_ApplicationsController import apply_for_work_controller
 from controller.event_RegistrationController import register_event
 from controller.recommandationController import get_user_recommendations
-
+from controller.servicesController import add_services_controller, get_all_services
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -78,5 +78,15 @@ def get_user_recommendations_route():
     # Calling the Logout function from authentication.py
     return get_user_recommendations()
 
+
+@app.route('/add_services', methods=['POST'])
+def add_services_route():
+    # Calling the Logout function from authentication.py
+    return add_services_controller()
+
+@app.route('/get_all_services', methods=['GET'])
+def get_all_services_route():
+    # Calling the Logout function from authentication.py
+    return get_all_services()
 if __name__ == '__main__':
     app.run(debug=True)
