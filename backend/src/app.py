@@ -8,6 +8,9 @@ from controller.freelancer_ApplicationsController import apply_for_work_controll
 from controller.event_RegistrationController import register_event
 from controller.recommandationController import get_user_recommendations
 from controller.servicesController import add_services_controller, get_all_services
+from controller.channel_CreateController import channel_registrationController, get_channel_detailsController
+from controller.join_memberController import join_community
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -88,5 +91,22 @@ def add_services_route():
 def get_all_services_route():
     # Calling the Logout function from authentication.py
     return get_all_services()
+
+
+@app.route('/channel_registration', methods=['POST'])
+def channel_registration_route():
+    # Calling the Logout function from authentication.py
+    return channel_registrationController()
+
+@app.route('/get_channel_details', methods=['GET'])
+def get_channel_details_route():
+    # Calling the Logout function from authentication.py
+    return get_channel_detailsController()
+
+@app.route('/join_community/<int:channel_id>', methods=['POST'])
+def join_community_route(channel_id):
+    # Calling the Logout function from authentication.py
+    return join_community(channel_id)
+
 if __name__ == '__main__':
     app.run(debug=True)

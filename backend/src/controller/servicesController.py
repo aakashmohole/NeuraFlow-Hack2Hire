@@ -1,7 +1,9 @@
 from flask import jsonify, request
 from utils.verify_token import verify_token
 from models.service_model import create_service, get_all_services, service_images
+from models.profile_update_model import get_user_from_db
 
+import traceback
 
 def add_services_controller():
     try:
@@ -9,10 +11,17 @@ def add_services_controller():
         user_id = verify_token()
         if not user_id:
             return jsonify({"error": "Invalid or expired token"}), 401
+        
+        user_details = get_user_from_db(user_id)
 
+        print(user_details[3])
+        
+        if user_details[3] != 'freelancer' :
+            return jsonify({"error" : "Only freelancers can create services"});
+        
         # Extract service details from the request
         # data = request.json
-        data = request.json
+        data = request.form
         title = data.get('title')
         category = data.get('category')
         sub_category = data.get('sub_category')
@@ -20,23 +29,16 @@ def add_services_controller():
         pricing = data.get('pricing')  # JSON array
         description = data.get('description')
         faq = data.get('faq')  # JSON array
-
-        # file_data = request.files['services_image']
-        # if not file_data:
-        #     return jsonify({"error" : "Profile photo required"})
-        # photo_url  = service_images(file_data)
-        # if not photo_url:
-        #     return jsonify({"error": "Failed to update photo"}), 500    
-
-         # Handle file upload
+        #  Handle file upload
         file_data = request.files.get('services_image')
+
         if not file_data:
             return jsonify({"error": "Profile photo is required"}), 400
 
         photo_url = service_images(file_data)
         if not photo_url:
             return jsonify({"error": "Failed to upload photo"}), 500
-
+        
          # Validate required fields
         if not (title and category and sub_category and skills and pricing and description and faq):
             return jsonify({"error": "Missing required fields"}), 400
@@ -49,6 +51,7 @@ def add_services_controller():
         return jsonify({"message": "Service added!"}), 200
 
     except Exception as e:
+        traceback.print_exc()
         return jsonify({"error": f"An error occurred: {e}"}), 500
 
     

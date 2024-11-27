@@ -11,13 +11,13 @@ cloudinary.config(
     secure=True
 )
 
-@staticmethod
 def create_service(user_id, title, category, sub_category, skills, pricing, description, faq, photo):
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
-        INSERT INTO userServices (user_id, title, category, sub_category, skills, pricing, description, faq, photo)
+        INSERT INTO userservices (user_id, title, category, sub_category, skills, pricing, description, faq, photo)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        RETURNING service_id
     """, (user_id, title, category, sub_category, skills, pricing, description, faq, photo))
     service_id = cur.fetchone()[0]
     conn.commit()
@@ -35,11 +35,10 @@ def service_images(file_data):
         return f"Unexpected error occurred during upload: {str(e)}"
     
     
-@staticmethod
 def get_all_services():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM services")
+    cur.execute("SELECT * FROM userservices")
     services = cur.fetchall()
     cur.close()
     conn.close()

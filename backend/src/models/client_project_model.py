@@ -52,7 +52,8 @@ def get_client_projects(user_id):
                 "project_deadline": project[8],
                 "title": project[9],
                 "connects": project[10],
-                "level": project[11]
+                "level": project[11],
+                "created_at": project[12]
             })
 
         return project_list,  
@@ -94,7 +95,8 @@ def get_client_project_by_id(project_id):
             "work_type": project[8],
             "price": project[9],
             "connects": project[10],
-            "level": project[11]
+            "level": project[11],
+            "created_at": project[12]
         }
 
         return project_details,  
