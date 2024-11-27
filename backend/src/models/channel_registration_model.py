@@ -46,7 +46,7 @@ def channel_images(file_data):
         return f"Unexpected error occurred during upload: {str(e)}"
     
 # Function to fetch user details from the database
-def get_channel_details(user_id):
+def get_channel_details():
     conn = get_db_connection()
     if not conn:
         return None
@@ -56,18 +56,18 @@ def get_channel_details(user_id):
         cursor.execute("""
             SELECT created_by, channel_name, description, channel_category, channel_photo
             FROM channels
-            WHERE id = %s
-        """, (user_id,))
+
+        """)
         result = cursor.fetchone()
 
-        if result:
-            return {
-                "created_by": result[1],
-                "channel_name": result[2],
-                "description": result[3],
-                "channel_category": result[4]
-            }
-        return None
+        # if result:
+        #     return {
+        #         "created_by": result[1],
+        #         "channel_name": result[2],
+        #         "channel_category": result[3],
+        #         "description": result[4]
+        #     }
+        return result
 
     except Exception:
         return None
