@@ -1,4 +1,5 @@
 from utils.connection import get_db_connection
+import traceback
 
 # Database connection setup
 def check_membership(user_id, community_id):
@@ -73,28 +74,54 @@ def update_members_count(channel_id):
         conn.rollback()
         return False, str(e)
 
+def check_channel_available(channel_id):
+     try:
+        conn = get_db_connection()
+        if not conn:
+            return None  # Return None when there's no connection
+
+        cursor = conn.cursor()
+        cursor.execute("""
+                       SELECT channel_id
+                       FROM channels
+                       WHERE channel_id = %s
+        """, (channel_id,)) 
+        result = cursor.fetchone()
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        if result:
+            return result[0]  # Assuming `created_by` is the first column in the SELECT
+        return None  # Return None if no record is found
+
+     except Exception as e:
+        traceback.print_exc()  # Debugging
+        return None  # Return None in case of an error
+
 def check_community_owner(channel_id):
     try:
         conn = get_db_connection()
         if not conn:
-            return False, "Failed to connect to the database"
+            return None  # Return None when there's no connection
 
         cursor = conn.cursor()
         cursor.execute("""
                        SELECT created_by
                        FROM channels
                        WHERE channel_id = %s
-        """,(channel_id))
-        user = cursor.fetchone()
+        """, (channel_id,)) 
+        result = cursor.fetchone()
 
         conn.commit()
-        conn.close()
         cursor.close()
-        
-        if user:
-            return user  # Extract the channel_id from the tuple
+        conn.close()
+
+        if result:
+            return result  # Assuming `created_by` is the first column in the SELECT
         return None  # Return None if no record is found
-    
+
     except Exception as e:
-        conn.rollback()
-        return False, str(e)
+        traceback.print_exc()  # Debugging
+        return None  # Return None in case of an error
