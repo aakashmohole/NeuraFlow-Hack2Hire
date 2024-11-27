@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from models.join_member_model import check_membership, add_user_to_community, update_members_count, check_community_owner
+from models.join_member_model import check_membership, add_user_to_community, update_members_count, check_community_owner,check_channel_available
 from utils.verify_token import verify_token
 import traceback
 
@@ -13,11 +13,17 @@ def join_community(channel_id):
         if not user_id or not channel_id:
             return jsonify({'error': 'User ID and channel ID are required'}), 400
 
+        channel = check_channel_available(channel_id)
+
+        if not channel:
+            return jsonify({'error': 'Channel not found'}), 400
+
        # Check if the user is the creator of the community
-        owner_channel_id = check_community_owner(channel_id)
-        print(owner_channel_id)
-        if owner_channel_id == user_id:
-            return jsonify({'error': 'Admin is already in community'}), 400
+        result = check_community_owner(channel_id)
+
+        if result[0] == user_id:
+            return jsonify({'error': 'User is the creator of the community and cannot join'}), 400
+
         
         # Check if the user is already a member
         existing_membership = check_membership(user_id, channel_id)
