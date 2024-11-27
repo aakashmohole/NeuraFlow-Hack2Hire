@@ -43,7 +43,7 @@ def get_recommendations(domain, top_n=5):
 
         # Step 1: Encode the domain feature
         encoder = OneHotEncoder(handle_unknown='ignore')
-        domain_encoded = encoder.fit_transform(df[['Domain']])  # Encode domains in the dataset
+        domain_encoded = encoder.fit_transform(df[['domain']])  # Encode domains in the dataset
 
         # Transform user domain into the same encoded format
         user_domain_vector = encoder.transform([[domain]])
