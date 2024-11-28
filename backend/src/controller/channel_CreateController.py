@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from utils.verify_token import verify_token
-from models.channel_registration_model import channel_registration, get_channel_details, channel_images
+from models.channel_registration_model import channel_registration, get_channel_details, channel_images, get_channel_details_by_id
 # Controller for channel registration
 def channel_registrationController():
     try:
@@ -34,3 +34,7 @@ def channel_registrationController():
 def get_channel_detailsController():
     channel = get_channel_details()
     return jsonify(channel), 200
+
+def get_channel_details_by_idController(channel_id):
+    channel = get_channel_details_by_id(channel_id)
+    return jsonify({"channel": channel}), 200

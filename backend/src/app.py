@@ -8,8 +8,9 @@ from controller.freelancer_ApplicationsController import apply_for_work_controll
 from controller.event_RegistrationController import register_event
 from controller.recommandationController import get_user_recommendations
 from controller.servicesController import add_services_controller, get_all_services
-from controller.channel_CreateController import channel_registrationController, get_channel_detailsController
+from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController
 from controller.join_memberController import join_community
+from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -20,93 +21,98 @@ app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 # Register Route
 @app.route('/register', methods=['POST'])
 def register_route():
-    # Calling the register function from authentication.py
     return register()
 
 # Login Route
 @app.route('/login', methods=['POST'])
 def login_route():
-    # Calling the login function from authentication.py
     return login()
 
 # Logout Route
 @app.route('/logout', methods=['POST'])
 def logout_route():
-    # Calling the Logout function from authentication.py
     return logout()
 
 @app.route('/get_user_details', methods=['GET'])
 def get_user_details_route():
-    # Calling the Logout function from authentication.py
     return get_user_details()
 
 @app.route('/update_user_details', methods=['POST'])
 def update_user_details_route():
-    # Calling the Logout function from authentication.py
     return update_user_details()
 
 @app.route('/update_profile_photo', methods=['POST'])
 def update_profile_photo_route():
-    # Calling the Logout function from authentication.py
     return update_profile_photo()
 
 @app.route('/create_client_project', methods=['POST'])
 def create_client_project_route():
-    # Calling the Logout function from authentication.py
     return create_client_project()
 
 @app.route('/get_client_projects', methods=['GET'])
 def get_client_projects_route():
-    # Calling the Logout function from authentication.py
     return get_client_projects_controller()
 
 @app.route('/get_client_project_by_id/<int:project_id>', methods=['GET'])
 def get_client_project_by_id_route(project_id):
-    # Calling the controller and passing the project_id
     return get_client_project_by_id__controller(project_id)
 
 @app.route('/apply_for_work', methods=['POST'])
 def apply_for_work_controller_route():
-    # Calling the Logout function from authentication.py
     return apply_for_work_controller()
 
 
 @app.route('/event_registration', methods=['POST'])
 def event_registration_route():
-    # Calling the Logout function from authentication.py
     return register_event()
 
 @app.route('/get_user_recommendations', methods=['GET'])
 def get_user_recommendations_route():
-    # Calling the Logout function from authentication.py
     return get_user_recommendations()
 
 
 @app.route('/add_services', methods=['POST'])
 def add_services_route():
-    # Calling the Logout function from authentication.py
     return add_services_controller()
 
 @app.route('/get_all_services', methods=['GET'])
 def get_all_services_route():
-    # Calling the Logout function from authentication.py
     return get_all_services()
 
 
 @app.route('/channel_registration', methods=['POST'])
 def channel_registration_route():
-    # Calling the Logout function from authentication.py
     return channel_registrationController()
 
 @app.route('/get_channel_details', methods=['GET'])
 def get_channel_details_route():
-    # Calling the Logout function from authentication.py
     return get_channel_detailsController()
+
+@app.route('/get_channel_details_by_id/<int:channel_id>', methods=['GET'])
+def get_channel_details_by_id_route(channel_id):
+    return get_channel_details_by_idController(channel_id)
 
 @app.route('/join_community/<int:channel_id>', methods=['POST'])
 def join_community_route(channel_id):
-    # Calling the Logout function from authentication.py
     return join_community(channel_id)
+
+@app.route('/post_in_channel/<int:channel_id>', methods=['POST'])
+def post_in_channel_route(channel_id):
+    return post_in_channel(channel_id)
+
+@app.route('/like_postController/<int:post_id>', methods=['POST'])
+def like_postController_route(post_id):
+    return like_postController(post_id)
+
+@app.route('/add_comment/<int:post_id>', methods=['POST'])
+def add_commentController_route(post_id):
+    return add_commentController(post_id)
+
+# get post_details rout
+@app.route('/get_post_details/<int:post_id>', methods=['POST'])
+def get_post_detailsController_route(post_id):
+    return get_post_detailsController(post_id)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

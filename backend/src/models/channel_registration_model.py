@@ -45,8 +45,39 @@ def channel_images(file_data):
     except Exception as e:
         return f"Unexpected error occurred during upload: {str(e)}"
     
-# Function to fetch user details from the database
 def get_channel_details():
+    conn = get_db_connection()
+    if not conn:
+        return []
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT created_by, channel_name, description, channel_category, channel_photo, created_at, member_count
+            FROM channels
+        """)
+        results = cursor.fetchall()
+
+        return [
+            {
+                "created_by": row[0],
+                "channel_name": row[1],
+                "description": row[2],
+                "channel_category": row[3],
+                "channel_photo": row[4],
+                "created_at": row[5],
+                "member_count": row[6],
+            }
+            for row in results
+        ]
+    except Exception as e:
+        return None
+    finally:
+        cursor.close()
+        conn.close()
+
+        
+def get_channel_details_by_id(channel_id):
     conn = get_db_connection()
     if not conn:
         return None
@@ -54,24 +85,25 @@ def get_channel_details():
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT created_by, channel_name, description, channel_category, channel_photo
+            SELECT created_by, channel_name, description, channel_category, channel_photo, created_at, member_count
             FROM channels
-
-        """)
+            WHERE channel_id = %s
+        """, (channel_id,))
+        
         result = cursor.fetchone()
-
-        # if result:
-        #     return {
-        #         "created_by": result[1],
-        #         "channel_name": result[2],
-        #         "channel_category": result[3],
-        #         "description": result[4]
-        #     }
-        return result
-
-    except Exception:
+        if result:
+            return {
+                "created_by": result[0],
+                "channel_name": result[1],
+                "description": result[2],
+                "channel_category": result[3],
+                "channel_photo": result[4],
+                "created_at": result[5],
+                "member_count": result[6],
+            }
         return None
-
+    except Exception as e:
+        return None
     finally:
         cursor.close()
         conn.close()
