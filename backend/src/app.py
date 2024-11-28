@@ -92,7 +92,6 @@ def get_all_services_route():
     # Calling the Logout function from authentication.py
     return get_all_services()
 
-
 @app.route('/channel_registration', methods=['POST'])
 def channel_registration_route():
     # Calling the Logout function from authentication.py

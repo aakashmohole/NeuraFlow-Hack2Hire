@@ -54,20 +54,28 @@ def get_channel_details(user_id):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT created_by, channel_name, description, channel_category, channel_photo
+            SELECT *
             FROM channels
-            WHERE id = %s
+            WHERE created_by = %s
         """, (user_id,))
-        result = cursor.fetchone()
+        result = cursor.fetchall()
+
+        channels = []
 
         if result:
-            return {
-                "created_by": result[1],
-                "channel_name": result[2],
-                "description": result[3],
-                "channel_category": result[4]
-            }
-        return None
+           for row in result:
+                channels.append({
+                    "channel_id": row[0],
+                    "created_by": row[1],
+                    "channel_name": row[2],
+                    "description": row[3],
+                    "channel_category": row[4],
+                    "channel_photo" : row[5],
+                    "created_at": row[6]
+                })
+                
+        
+        return channels if channels else None
 
     except Exception:
         return None
