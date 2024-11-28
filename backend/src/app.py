@@ -79,7 +79,6 @@ def add_services_route():
 def get_all_services_route():
     return get_all_services()
 
-
 @app.route('/channel_registration', methods=['POST'])
 def channel_registration_route():
     return channel_registrationController()
