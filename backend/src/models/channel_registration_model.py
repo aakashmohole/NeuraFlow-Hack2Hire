@@ -45,36 +45,46 @@ def channel_images(file_data):
     except Exception as e:
         return f"Unexpected error occurred during upload: {str(e)}"
     
-def get_channel_details():
+# Function to fetch user details from the database
+def get_channel_details(user_id):
     conn = get_db_connection()
     if not conn:
-        return []
+        return None
 
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT created_by, channel_name, description, channel_category, channel_photo, created_at, member_count
+            SELECT *
             FROM channels
-        """)
-        results = cursor.fetchall()
+            WHERE created_by = %s
+        """, (user_id,))
+        result = cursor.fetchall()
 
-        return [
-            {
-                "created_by": row[0],
-                "channel_name": row[1],
-                "description": row[2],
-                "channel_category": row[3],
-                "channel_photo": row[4],
-                "created_at": row[5],
-                "member_count": row[6],
-            }
-            for row in results
-        ]
-    except Exception as e:
+        channels = []
+
+
+        for row in result:
+            channels.append({
+                "channel_id": row[0],
+                "created_by" : row[1],
+                "channel_name": row[2],
+                "description": row[3],
+                "channel_category": row[4],
+                "channel_photo" : row[5],
+                "created_at": row[6],
+                "members_count" : row[7]
+            })
+        
+        return channels if channels else None
+
+    except Exception:
         return None
+
     finally:
         cursor.close()
         conn.close()
+
+
 
         
 def get_channel_details_by_id(channel_id):
@@ -102,6 +112,42 @@ def get_channel_details_by_id(channel_id):
                 "member_count": result[6],
             }
         return None
+    except Exception as e:
+        return None
+    finally:
+        cursor.close()
+        conn.close()
+
+
+        
+def get_channels():
+    conn = get_db_connection()
+    if not conn:
+        return None
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT *
+            FROM channels
+        """)
+        
+        channels = []
+        result = cursor.fetchall()
+
+
+        for row in result:
+            channels.append({
+                "channel_id": row[0],
+                "created_by" : row[1],
+                "channel_name": row[2],
+                "description": row[3],
+                "channel_category": row[4],
+                "channel_photo" : row[5],
+                "created_at": row[6],
+                "members_count" : row[7]
+            })
+        return channels if channels else None
     except Exception as e:
         return None
     finally:
