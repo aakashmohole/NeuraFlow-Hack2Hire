@@ -8,7 +8,7 @@ from controller.freelancer_ApplicationsController import apply_for_work_controll
 from controller.event_RegistrationController import register_event
 from controller.recommandationController import get_user_recommendations
 from controller.servicesController import add_services_controller, get_all_services
-from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController
+from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController,get_all_channels
 from controller.join_memberController import join_community
 from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController
 
@@ -111,6 +111,10 @@ def add_commentController_route(post_id):
 @app.route('/get_post_details/<int:post_id>', methods=['POST'])
 def get_post_detailsController_route(post_id):
     return get_post_detailsController(post_id)
+
+@app.route('/get_channels', methods=['GET'])
+def get_all_channels_route():
+    return get_all_channels()
 
 
 if __name__ == '__main__':
