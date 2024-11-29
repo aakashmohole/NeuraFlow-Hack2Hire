@@ -32,7 +32,7 @@ def create_client_project():
     if work_type not in ['Hourly Rate', 'Fixed Rate']:
         return jsonify({"error": "Invalid work type. Must be 'HourlyRate' or 'FixedRate'."}), 400
 
-    if price < 5:
+    if int(price) < 5:
         return jsonify({"error": "Price must be at least $5"}), 400
 
     project_id= create_project(user_id, domain, title, description, skills, proposal_document, project_deadline, work_type, price, connects, level)

@@ -36,7 +36,7 @@ def get_user_work_details(user_id):
 def get_recommendations(domain, top_n=5):
     try:
         # Load the dataset
-        df = pd.read_csv('C://Users//Aakash//Desktop//NeuraFlow-Hack2Hire//backend//User//recommandation_system//dataset.csv')
+        df = pd.read_csv('D://FSD//SIH2024//NeuraFlowD//NeuraFlow-Hack2Hire//backend//src//recommandation_system//dataset.csv')
 
         if df.empty:
             return {"error": "Dataset is empty."}
