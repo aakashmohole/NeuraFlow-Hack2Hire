@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from models.community_post_model import is_channel_admin, create_post, like_post, add_comment, get_post_details
+from models.community_post_model import is_channel_admin, create_post, like_post, add_comment, get_post_details, get_total_comments, get_total_likes
 from utils.verify_token import verify_token
 import traceback
 
@@ -89,6 +89,7 @@ def get_post_detailsController(post_id):
         if not post:
             return jsonify({"error": "Post not found"}), 404
 
+        
         # Structure the response
         post_details = {
             "post": {
@@ -114,3 +115,28 @@ def get_post_detailsController(post_id):
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": "An error occurred while fetching the post"}), 500
+
+def get_post_like_comment_detailsController(post_id):
+    try:
+        # Fetch total likes and comments using the helper functions
+        total_likes = get_total_likes(post_id)
+        total_comments = get_total_comments(post_id)
+
+        # Check if both functions succeeded
+        if total_likes is None or total_comments is None:
+            return jsonify({
+                "error": "Failed to fetch post details. Please try again later."
+            }), 500
+
+        # Return the details in JSON format
+        return jsonify({
+            "post_id": post_id,
+            "total_likes": total_likes,
+            "total_comments": total_comments
+        })
+    except Exception as e:
+        # Print the traceback for debugging
+        traceback.print_exc()
+        return jsonify({
+            "error": "An unexpected error occurred. Please try again later."
+        }), 500

@@ -124,3 +124,56 @@ def get_post_details(post_id):
     except Exception as e:
         traceback.print_exc()
         return None, None
+
+
+def get_total_likes(post_id):
+    try:
+        # Get database connection
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # SQL query to count likes for a specific post_id
+        cursor.execute("""
+            SELECT COUNT(like_id) AS likes_count
+            FROM likes
+            WHERE post_id = %s
+        """, (post_id,))
+
+        # Fetch the total likes count
+        total_likes = cursor.fetchone()[0]
+
+        # Close database connection
+        cursor.close()
+        conn.close()
+
+        return total_likes
+    except Exception as e:
+        # Print the traceback for debugging
+        traceback.print_exc()
+        return None
+    
+def get_total_comments(post_id):
+    try:
+        # Get database connection
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # SQL query to count comments for a specific post_id
+        cursor.execute("""
+            SELECT COUNT(comment_id) AS comments_count
+            FROM comments
+            WHERE post_id = %s
+        """, (post_id,))
+
+        # Fetch the total comments count
+        total_comments = cursor.fetchone()[0]
+
+        # Close database connection
+        cursor.close()
+        conn.close()
+
+        return total_comments
+    except Exception as e:
+        # Print the traceback for debugging
+        traceback.print_exc()
+        return None

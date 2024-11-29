@@ -10,7 +10,7 @@ from controller.recommandationController import get_user_recommendations
 from controller.servicesController import add_services_controller, get_all_services
 from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController
 from controller.join_memberController import join_community
-from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController
+from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController,get_post_like_comment_detailsController
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -112,6 +112,9 @@ def add_commentController_route(post_id):
 def get_post_detailsController_route(post_id):
     return get_post_detailsController(post_id)
 
+@app.route('/get_post_like_comment_details/<int:post_id>', methods=['POST'])
+def get_post_like_comment_detailsController_route(post_id):
+    return get_post_like_comment_detailsController(post_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
