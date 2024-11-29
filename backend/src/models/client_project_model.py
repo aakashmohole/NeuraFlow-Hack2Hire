@@ -105,3 +105,41 @@ def get_client_project_by_id(project_id):
     finally:
         cursor.close()
         conn.close()
+
+
+
+# Function to get all client projects
+def get_all_client_projects():
+    conn = get_db_connection()
+    if not conn:
+        return   "Failed to connect to database"
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM clientProjects")
+        projects = cursor.fetchall()
+
+        project_list = []
+        for project in projects:
+            project_list.append({
+                "project_id": project[0],
+                "clientID": project[1],
+                "domain": project[2],
+                "description": project[3],
+                "skills": project[4],
+                "proposal_document": project[5],
+                "work_type": project[6],
+                "price": project[7],
+                "project_deadline": project[8],
+                "title": project[9],
+                "connects": project[10],
+                "level": project[11],
+                "created_at": project[12]
+            })
+
+        return project_list,  
+    except Exception as e:
+        return   f"Failed to retrieve projects: {str(e)}"
+    finally:
+        cursor.close()
+        conn.close()

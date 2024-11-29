@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from utils.authentication import login, logout, register
 from controller.profile_UpdateController import get_user_details, update_profile_photo, update_user_details
-from controller.client_ProjectsController import create_client_project, get_client_projects_controller, get_client_project_by_id__controller
+from controller.client_ProjectsController import create_client_project, get_client_projects_controller, get_client_project_by_id__controller, get_all_client_projects_controller
 from controller.freelancer_ApplicationsController import apply_for_work_controller
 from controller.event_RegistrationController import register_event
 from controller.recommandationController import get_user_recommendations
@@ -52,6 +52,10 @@ def create_client_project_route():
 @app.route('/get_client_projects', methods=['GET'])
 def get_client_projects_route():
     return get_client_projects_controller()
+
+@app.route('/get_all_client_projects_controller', methods=['GET'])
+def get_all_client_projects_controller_route():
+    return get_all_client_projects_controller()
 
 @app.route('/get_client_project_by_id/<int:project_id>', methods=['GET'])
 def get_client_project_by_id_route(project_id):
