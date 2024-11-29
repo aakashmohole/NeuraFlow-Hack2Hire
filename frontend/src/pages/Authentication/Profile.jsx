@@ -1,32 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/custom/Header";
+import Header from "../../components/custom/Header";
+import { getUser } from "../../api/userApi";
+import PageLoader from "../../components/custom/PageLoader";
 
 export default function ProfilePage() {
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const fetchUser = async () => {
+      const data = await getUser(setLoading);
 
-    if (userInfo) {
-      setUser(userInfo);
-    }
+      if (data) setUser(data.data.user);
+    };
+
+    fetchUser();
   }, []);
 
-  if (!user) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-900 z-50">
-        <div className="flex flex-col items-center space-y-4">
-          {/* Spinning Loader */}
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent border-dashed rounded-full animate-spin"></div>
-          {/* Loading Text */}
-          <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">
-            Loading, please wait...
-          </p>
-        </div>
-      </div>
-    );
+  if (loading) {
+    return <PageLoader />;
   }
 
   return (
@@ -41,34 +36,43 @@ export default function ProfilePage() {
             />
           </div>
           <div className="flex flex-col items-center -mt-20 gap-2">
-            {user && user.profile_photo ? (
-              <img
-                src={user.profile_photo}
-                className="w-40 h-40 object-cover border-4 border-white rounded-full"
-              />
-            ) : (
-              <div className="w-40 h-40 rounded-full bg-gradient-to-tr from-pink-600 to-purple-600 flex justify-center items-center text-white p-2 font-semibold ">
-                {user.firstname[0].toUpperCase()}
-                {user.lastname[0].toUpperCase()}
-              </div>
-            )}
+            {user &&
+              (user.profile_photo ? (
+                <img
+                  src={user.profile_photo}
+                  className="w-40 h-40 object-cover border-4 border-white rounded-full"
+                />
+              ) : (
+                <div className="w-40 h-40 rounded-full bg-gradient-to-tr from-pink-600 to-purple-600 flex justify-center items-center text-white p-2 font-semibold ">
+                  user.firstname[0].toUpperCase() user.lastname[0].toUpperCase()
+                </div>
+              ))}
 
             <div className="flex items-center space-x-2 mt-2">
-              <p className="text-2xl text-white font-bold">
-                {user.firstname} {user.lastname}
-              </p>
-              <p className="text-gray-400">{user.email}</p>
+              {user && (
+                <>
+                  <p className="text-2xl text-white font-bold">
+                    {user.firstname} {user.lastname}
+                  </p>
+                  <p className="text-gray-400">{user.email}</p>
+                </>
+              )}
             </div>
-            <p className="text-xl text-gray-400 font-bold">
-              {user.hourly_rate ? `$${user.hourly_rate}` : "Hourly rate"}
-            </p>
-            <p className="text-xl text-gray-400 font-bold">
-              Connects : {user.connects}
-            </p>
-            <p className="text-gray-400">
-              {user.working_domain} |{" "}
-              <span className="text-sm">{user.country}</span>
-            </p>
+            {user && (
+              <>
+                <p className="text-xl text-gray-400 font-bold">
+                  {user.hourly_rate ? `$${user.hourly_rate}` : "Hourly rate"}
+                </p>
+                <p className="text-xl text-gray-400 font-bold">
+                  Connects : {user.connects}
+                </p>
+                <p className="text-gray-400">
+                  {user.working_domain} |{" "}
+                  <span className="text-sm">{user.country}</span>
+                </p>
+              </>
+            )}
+
             <div className="flex items-center">
               <svg
                 className="w-4 h-4 text-yellow-300 me-1"
@@ -133,13 +137,11 @@ export default function ProfilePage() {
           </h2>
           <div>
             <div>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                AI & Machine Learning | Cloud Computing, Analytics, Data
-                Analytics I am committed to mastering the art of transforming
-                raw data into actionable insights. My academic pursuits have
-                equipped me with a robust foundation in data analysis, machine
-                learning, and data visualization.
-              </p>
+              {user && user.bio && (
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  {user.bio}
+                </p>
+              )}
             </div>
 
             <div className="mt-4">
@@ -173,7 +175,8 @@ export default function ProfilePage() {
               Technical Skills
             </h2>
             <div className="flex flex-wrap gap-2 mt-2">
-              {user.technical_skills &&
+              {user &&
+                user.technical_skills &&
                 user.technical_skills.map((skill, index) => (
                   <span
                     key={index}
@@ -191,21 +194,18 @@ export default function ProfilePage() {
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
               Work Experience
             </h2>
-            {user.work_experience ? (
+            {user && user.work_experience ? (
               <div className="mt-2 space-y-4">
-                {user.workExperience.map((work, index) => (
+                {user.work_experience.map((work, index) => (
                   <div
                     key={index}
                     className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md shadow"
                   >
                     <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200">
-                      {work.role} @ {work.company}
+                      {work.job_title} @ {work.company}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {work.duration}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      {work.description}
                     </p>
                   </div>
                 ))}
@@ -224,9 +224,9 @@ export default function ProfilePage() {
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
               Education
             </h2>
-            {user.education ? (
+            {user && user.educational_details ? (
               <div className="mt-2 space-y-4">
-                {user.education.map((edu, index) => (
+                {user.educational_details.map((edu, index) => (
                   <div
                     key={index}
                     className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md shadow"
@@ -235,10 +235,13 @@ export default function ProfilePage() {
                       {edu.degree}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {edu.institution}
+                      {edu.field}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {edu.duration}
+                      {edu.institute}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {edu.year_of_graduation}
                     </p>
                   </div>
                 ))}
@@ -258,22 +261,26 @@ export default function ProfilePage() {
               Social Links
             </h2>
             <div className="flex gap-4 mt-2">
-              <a
-                href={user.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Linkedin
-              </a>
-              <a
-                href={user.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Twitter
-              </a>
+              {user && (
+                <>
+                  <a
+                    href={user?.social_media_links?.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:underline cursor-pointer"
+                  >
+                    Linkedin
+                  </a>
+                  <a
+                    href={user?.social_media_links?.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:underline cursor-pointer"
+                  >
+                    Twitter
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

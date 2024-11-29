@@ -1,86 +1,9 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/custom/Header";
 import ProjectCard from "../components/custom/Explore/Card";
-
-const projectData = [
-  {
-    id: 1,
-    title: "UI Design Project",
-    category: "Recommended",
-    budget: 500,
-    description:
-      "This project involves designing a visually appealing and highly responsive user interface for an innovative e-commerce application. The goal is to create a seamless and engaging shopping experience for users with features such as personalized product recommendations, smooth navigation, and a modern, clean look that aligns with the latest design trends. Special attention should be paid to mobile responsiveness and intuitive layouts to enhance user retention and conversion rates.",
-    country: "USA",
-    level: "Intermediate",
-    estimatedTime: "1 month",
-    requiredSkills: ["UI Design", "Figma", "Adobe XD", "Responsive Design"],
-  },
-  {
-    id: 2,
-    title: "Full-Stack Development",
-    category: "Recent",
-    budget: 1200,
-    description:
-      "Develop a full-stack solution for a scalable SaaS platform designed to assist small businesses in automating their customer service operations. The project requires building a robust backend system for data storage, a secure user authentication flow, and a dynamic front-end interface. Key features include an integrated analytics dashboard, a role-based user management system, and API integrations for real-time data updates. This project emphasizes both backend efficiency and frontend responsiveness.",
-    country: "India",
-    level: "Advanced",
-    estimatedTime: "2-3 months",
-    requiredSkills: ["React", "Node.js", "MongoDB", "REST APIs"],
-  },
-  {
-    id: 3,
-    title: "Logo Design",
-    category: "Saved",
-    budget: 150,
-    description:
-      "Create a professional and memorable logo for a tech startup specializing in AI-driven solutions for environmental sustainability. The logo should embody innovation, trust, and eco-friendliness while maintaining a clean and modern aesthetic. Consider exploring geometric shapes, gradient shading, or nature-inspired motifs. The ideal outcome would be a scalable logo that can be used across digital platforms, including web, mobile, and print media.",
-    country: "UK",
-    level: "Beginner",
-    estimatedTime: "2 weeks",
-    requiredSkills: [
-      "Graphic Design",
-      "Adobe Illustrator",
-      "Creativity",
-      "Branding",
-    ],
-  },
-  {
-    id: 4,
-    title: "Graphic design",
-    category: "Recommended",
-    budget: 3000,
-    description:
-      "This project involves designing a visually appealing and highly responsive user interface for an innovative e-commerce application. The goal is to create a seamless and engaging shopping experience for users with features such as personalized product recommendations, smooth navigation, and a modern, clean look that aligns with the latest design trends. Special attention should be paid to mobile responsiveness and intuitive layouts to enhance user retention and conversion rates.",
-    country: "India",
-    level: "Intermediate",
-    estimatedTime: "1 month",
-    requiredSkills: ["UI Design", "Figma", "Adobe XD", "Responsive Design"],
-  },
-  {
-    id: 5,
-    title: "Web page design",
-    category: "Recommended",
-    budget: 50,
-    description:
-      "This project involves designing a visually appealing and highly responsive user interface for an innovative e-commerce application. The goal is to create a seamless and engaging shopping experience for users with features such as personalized product recommendations, smooth navigation, and a modern, clean look that aligns with the latest design trends. Special attention should be paid to mobile responsiveness and intuitive layouts to enhance user retention and conversion rates.",
-    country: "UK",
-    level: "Intermediate",
-    estimatedTime: "1 month",
-    requiredSkills: ["Html", "css", "Javascript", "Responsive Design"],
-  },
-  // Add more projects as needed
-];
-
-const ProjectSection = ({ title, projects }) => (
-  <div className="w-full flex flex-col justify-center items-center">
-    <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-      {projects.map((project) => (
-        <ProjectCard key={project.id} {...project} />
-      ))}
-    </div>
-  </div>
-);
+import { getProjects } from "../api/userApi";
+import LoadingSkeleton from "../components/custom/LoadingSkeleton";
 
 export default function ExploreProjects() {
   const [selectedTab, setSelectedTab] = useState("Recommended");
@@ -88,34 +11,81 @@ export default function ExploreProjects() {
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [budget, setBudget] = useState("");
+  const [rateType, setRateType] = useState("");
+  const [projectData, setProjectData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [savedProjects, setSavedProjects] = useState([]);
+
+  useEffect(() => {
+    if (selectedTab === "Recent") {
+      fetchProjects();
+    } else if (selectedTab === "Saved") {
+      const saved = projectData.filter((project) =>
+        savedProjects.includes(project.project_id)
+      );
+      setProjectData(saved);
+    }
+  }, [selectedTab, savedProjects]);
+
+  const toggleSavedProject = (projectId) => {
+    setSavedProjects((prevSaved) => {
+      const updatedSaved = prevSaved.includes(projectId)
+        ? prevSaved.filter((id) => id !== projectId)
+        : [...prevSaved, projectId];
+      console.log("Updated saved projects:", updatedSaved);
+      return updatedSaved;
+    });
+  };
+
+  const fetchProjects = async () => {
+    try {
+      const { data } = await getProjects(setLoading);
+      if (data && data[0]) {
+        setProjectData(data[0]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+    }
+  };
 
   const filteredProjects = projectData
-    .filter((project) => project.category === selectedTab)
+    ?.filter((project) => {
+      if (
+        selectedTab === "Saved" &&
+        !savedProjects.includes(project.project_id)
+      ) {
+        return false;
+      }
+      return true;
+    })
     .filter((project) => {
       if (search) {
         return (
           project.title.toLowerCase().includes(search.toLowerCase()) ||
-          project.requiredSkills.some((skill) =>
+          project.skills.some((skill) =>
             skill.toLowerCase().includes(search.toLowerCase())
           )
         );
       }
       return true;
     })
-
     .filter((project) => {
-      if (budget === "Less than $500") return project.budget < 500;
+      if (budget === "Less than $500") return project?.price < 500;
       if (budget === "Between $100 to $500")
-        return project.budget >= 100 && project.budget <= 500;
-      if (budget === "$500+") return project.budget > 500;
+        return project?.price >= 100 && project?.price <= 500;
+      if (budget === "$500+") return project?.price > 500;
       return true;
     })
     .filter((project) =>
-      selectedLevel === "" ? true : project.level === selectedLevel
+      selectedLevel === "" ? true : project?.level === selectedLevel
     )
     .filter((project) =>
-      selectedCountry === "" ? true : project.country === selectedCountry
+      rateType === "" ? true : project.work_type === rateType
     );
+
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <>
@@ -142,7 +112,6 @@ export default function ExploreProjects() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-
         <div className="flex justify-center space-x-8 mb-4">
           {["Recommended", "Recent", "Saved"].map((tab) => (
             <button
@@ -158,7 +127,6 @@ export default function ExploreProjects() {
             </button>
           ))}
         </div>
-
         <div className="flex justify-center space-x-4 mb-8">
           <select
             className="bg-gray-800 text-gray-300 p-2 rounded-md"
@@ -166,7 +134,7 @@ export default function ExploreProjects() {
             onChange={(e) => setSelectedLevel(e.target.value)}
           >
             <option value="">All Levels</option>
-            <option value="Beginner">Beginner</option>
+            <option value="Begineer">Begineer</option>
             <option value="Intermediate">Intermediate</option>
             <option value="Advanced">Advanced</option>
           </select>
@@ -192,10 +160,31 @@ export default function ExploreProjects() {
             <option value="$500+">$500+</option>
             {/* Add more countries as needed */}
           </select>
+          <select
+            className="bg-gray-800 text-gray-300 p-2 rounded-md"
+            value={rateType}
+            onChange={(e) => setRateType(e.target.value)}
+          >
+            <option value="">Both</option>
+            <option value="Fixed Rate">Fixed Rate</option>
+            <option value="Hourly Rate">Hourly Rate</option>
+            {/* Add more countries as needed */}
+          </select>
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <ProjectSection title={selectedTab} projects={filteredProjects} />
+          <div className="w-full flex flex-col justify-center items-center">
+            <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+              {filteredProjects.map((project) => (
+                <ProjectCard
+                  key={project.project_id}
+                  {...project}
+                  toggleSave={() => toggleSavedProject(project.project_id)}
+                  isSaved={savedProjects.includes(project.project_id)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

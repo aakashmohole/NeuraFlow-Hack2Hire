@@ -1,21 +1,17 @@
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginUserSchema } from "../schemas/userSchema";
+import { loginUserSchema } from "../../schemas/userSchema";
 import { useState } from "react";
-import axios from "axios";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import { useNavigate } from "react-router-dom";
-
-import { loginUser } from "../api/userApi";
-import { login } from "../redux/features/authSlice";
+import { loginUser } from "../../api/userApi";
+import { login } from "../../redux/features/authSlice";
 import { useDispatch } from "react-redux";
 
 import { IoEyeOff, IoEye } from "react-icons/io5";
-import { BackgroundBeams } from "../components/ui/Beams";
+import { BackgroundBeams } from "../../components/ui/Beams";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);

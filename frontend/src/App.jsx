@@ -2,12 +2,20 @@ import LandingPage from "./pages/LandingPage";
 import ExploreProjects from "./pages/Project";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Service from "./pages/Service";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import Register from "./pages/Authentication/Register";
+import Login from "./pages/Authentication/Login";
 import AuthProvider from "./components/custom/AuthProvider";
 import SingleProject from "./pages/SingleProject";
-import FreelancerServices from "./pages/ClientProject";
-import ProfileSection from "./pages/Profile";
+import FreelancerServices from "./pages/Community/ClientProject";
+import ProfileSection from "./pages/Authentication/Profile";
+import ProfileUpdatePage from "./pages/Authentication/UpdateProfile";
+import Forum from "./pages/Forum";
+import CreateProject from "./pages/CreateProject";
+import CreateChannel from "./pages/Community/CreateChannel";
+import CommunityDashboard from "./pages/Community/CommunityDashboard";
+import ChannelPage from "./pages/Community/ChannelPage";
+import Webinar from "./pages/Webinar";
+import WebinarDetails from "./pages/WebinarDetails";
 
 function App() {
   const router = createBrowserRouter([
@@ -52,6 +60,58 @@ function App() {
           <ProfileSection />
         </AuthProvider>
       ),
+    },
+    {
+      path: "/profile/update",
+      element: (
+        <AuthProvider>
+          <ProfileUpdatePage />
+        </AuthProvider>
+      ),
+    },
+    {
+      path: "/forum",
+      element: (
+        <AuthProvider>
+          <Forum />
+        </AuthProvider>
+      ),
+    },
+    {
+      path: "/create-project",
+      element: <CreateProject />,
+    },
+    {
+      path: "/create-channel",
+      element: (
+        <AuthProvider>
+          <CreateChannel />
+        </AuthProvider>
+      ),
+    },
+    {
+      path: "community",
+      element: (
+        <AuthProvider>
+          <CommunityDashboard />
+        </AuthProvider>
+      ),
+    },
+    {
+      path: "channel/:id",
+      element: (
+        <AuthProvider>
+          <ChannelPage />
+        </AuthProvider>
+      ),
+    },
+    {
+      path: "/webinar",
+      element: <Webinar />,
+    },
+    {
+      path: "/webinar/:id",
+      element: <WebinarDetails />,
     },
   ]);
   return (

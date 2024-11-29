@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerUserSchema } from "../schemas/userSchema";
+import { registerUserSchema } from "../../schemas/userSchema";
 import { Link } from "react-router-dom";
 
 const Register = () => {

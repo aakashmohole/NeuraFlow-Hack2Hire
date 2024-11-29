@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+
 import {
   FaGlobe,
   FaClock,
@@ -10,24 +10,22 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const ProjectCard = ({
-  id,
+  project_id,
   title,
-  budget,
+  price,
   description,
-  country,
   level,
-  estimatedTime,
-  requiredSkills,
+  project_deadline,
+  skills,
+  isSaved,
+  toggleSave,
 }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/project/${id}`);
+    navigate(`/project/${project_id}`);
   };
 
-  const toggleSavedProject = () => {
-    console.log(id);
-  };
   return (
     <>
       <motion.div
@@ -40,7 +38,7 @@ const ProjectCard = ({
           {description}
         </p>
         <div className="flex flex-wrap gap-2 my-4">
-          {requiredSkills.map((skill, index) => (
+          {skills.map((skill, index) => (
             <span
               key={index}
               className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold"
@@ -50,26 +48,28 @@ const ProjectCard = ({
           ))}
         </div>
         <div className="text-sm text-gray-300 space-y-1">
-          <div className="flex items-center space-x-2 text-gray-400">
+          {/* <div className="flex items-center space-x-2 text-gray-400">
             <FaGlobe className="text-violet-200" />
             <span>Country: {country}</span>
-          </div>
+          </div> */}
           <div className="flex items-center space-x-2 text-gray-400">
             <FaTools className="text-violet-200" />
-            <span>Level: {level}</span>
+            <span>Level: {level || "2"}</span>
           </div>
           <div className="flex items-center space-x-2 text-gray-400">
             <FaClock className="text-violet-200" />
-            <span>Estimated Time: {estimatedTime}</span>
+            <span>Estimated Time: {project_deadline}</span>
           </div>
         </div>
         <div className="flex justify-between items-center mt-4">
-          <span className="text-blue-400 font-semibold">${budget}</span>
+          <span className="text-blue-400 font-semibold">${price}</span>
           <div className="flex justify-between items-center gap-6">
-            <FaRegBookmark
-              className="cursor-pointer"
-              onClick={toggleSavedProject}
-            />
+            {isSaved ? (
+              <FaBookmark className="cursor-pointer" onClick={toggleSave} />
+            ) : (
+              <FaRegBookmark className="cursor-pointer" onClick={toggleSave} />
+            )}
+
             <button
               className="text-sm text-white bg-gradient-to-t from-violet-500 to-fuchsia-500 px-4 py-2 rounded-md hover:bg-gradient-to-b"
               onClick={handleClick}
