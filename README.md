@@ -13,16 +13,14 @@
 
 ### 🧑‍💼 **Client Features**
 1. **Client Dashboard**  
-   - Explore freelancer services with advanced filtering by category, skill level, and price.
+   - Explore freelancer services by searching category, skill level, and price.
    - Manage posted projects and review freelancer applications.
 
 2. **Community Channel**  
    - Post updates or information for freelancers.  
    - Freelancers can react to posts using emojis, fostering engagement.
+   - 
 
-3. **Project Management**  
-   - View and manage ongoing projects.  
-   - Monitor freelancer performance and project progress.
 
 ### 🧑‍💻 **Freelancer Features**
 1. **Freelancer Dashboard**  
