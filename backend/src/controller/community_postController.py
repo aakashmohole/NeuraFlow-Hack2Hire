@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from models.community_post_model import is_channel_admin, create_post, like_post, add_comment, get_post_details, get_total_comments, get_total_likes
+from models.community_post_model import is_channel_admin, create_post, like_post, add_comment, get_post_details, get_total_comments, get_total_likes, get_post_details_by_channel
 from utils.verify_token import verify_token
 import traceback
 
@@ -82,50 +82,15 @@ def add_commentController(post_id):
 
 
 
-# def get_post_detailsController(channel_id):
-#     try:
-#         post = get_post_details(channel_id)
-
-#         if not post:
-#             return jsonify({"error": "Post not found"}), 404
-
-        
-#         # Structure the response
-#         post_details = {
-#             "post": {
-#                 "post_id": post[0],
-#                 "channel_id": post[1],
-#                 "user_id": post[2],
-#                 "content": post[3],
-#                 "created_at": post[4],
-#                 "likes_count": post[5]
-#             },
-#             "comments": [
-#                 {
-#                     "comment_id": comment[0],
-#                     "user_id": comment[1],
-#                     "comment": comment[2],
-#                     "created_at": comment[3]
-#                 } for comment in comments
-#             ]
-#         }
-
-#         return jsonify(post_details), 200
-
-#     except Exception as e:
-#         traceback.print_exc()
-#         return jsonify({"error": "An error occurred while fetching the post"}), 500
-
-
-
-def get_post_detailsController(channel_id):
+def get_post_detailsController(post_id):
     try:
-        post = get_post_details(channel_id)  # Fetch post details and comments
+        post, comments = get_post_details(post_id)
 
         if not post:
             return jsonify({"error": "Post not found"}), 404
 
-        # Extract post and comments from the result
+        
+        # Structure the response
         post_details = {
             "post": {
                 "post_id": post[0],
@@ -135,16 +100,65 @@ def get_post_detailsController(channel_id):
                 "created_at": post[4],
                 "likes_count": post[5]
             },
-            "comments": post[6] if post[6] else []  # Extract comments array (post[6] is the JSON array of comments)
+            "comments": [
+                {
+                    "comment_id": comment[0],
+                    "user_id": comment[1],
+                    "comment": comment[2],
+                    "created_at": comment[3]
+                } for comment in comments
+            ]
         }
 
-        # Return the structured response
         return jsonify(post_details), 200
 
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": "An error occurred while fetching the post"}), 500
-    
+
+def fetch_post_details_by_channel(channel_id):
+    """
+    Endpoint to fetch post details with comments using channel_id.
+
+    Query Params:
+        - channel_id: ID of the channel to fetch post details for.
+
+    Returns:
+        JSON response containing post details and comments.
+    """
+    try:
+        # channel_id = request.args.get('channel_id', type=int)
+        if not channel_id:
+            return jsonify({"error": "channel_id is required"}), 400
+
+        post, comments = get_post_details_by_channel(channel_id)
+
+        if not post:
+            return jsonify({"error": "No post found for the given channel_id"}), 404
+
+        response = {
+            "post": {
+                "post_id": post[0],
+                "channel_id": post[1],
+                "user_id": post[2],
+                "content": post[3],
+                "created_at": post[4],
+                "total_comments": post[5],
+            },
+            "comments": [
+                {
+                    "comment_id": comment[0],
+                    "user_id": comment[1],
+                    "comment": comment[2],
+                    "created_at": comment[3],
+                }
+                for comment in comments
+            ],
+        }
+        return jsonify(response), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error"}), 500
     
 def get_post_like_comment_detailsController(post_id):
     try:

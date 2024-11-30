@@ -8,10 +8,10 @@ from controller.client_ProjectsController import create_client_project, get_clie
 from controller.freelancer_ApplicationsController import apply_for_work_controller
 from controller.event_RegistrationController import register_event, get_all_registration_detailsController
 from controller.recommandationController import get_user_recommendations
-from controller.servicesController import add_services_controller, get_all_services
-from controller.channel_CreateController import channel_registrationController, get_channel_detailsController, get_channel_details_by_idController, get_all_channels
-from controller.join_memberController import join_community
-from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController, get_post_like_comment_detailsController
+from controller.servicesController import add_services_controller, get_all_services,get_service_by_id
+from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController,get_all_channels
+from controller.join_memberController import join_community,get_all_members
+from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController,get_post_like_comment_detailsController, fetch_post_details_by_channel
 
 # Initialize Flask application
 app = Flask(__name__)
@@ -95,13 +95,9 @@ def get_client_project_by_id_route(project_id):
     """
     return get_client_project_by_id__controller(project_id)
 
-# Freelancer application routes
-@app.route('/apply_for_work', methods=['POST'])
-def apply_for_work_controller_route():
-    """
-    Route for freelancers to apply for work
-    """
-    return apply_for_work_controller()
+@app.route('/apply_for_work/<int:project_id>', methods=['POST'])
+def apply_for_work_controller_route(project_id):
+    return apply_for_work_controller(project_id)
 
 # Event registration routes
 @app.route('/event_registration', methods=['POST'])
@@ -141,6 +137,15 @@ def get_all_services_route():
     """
     return get_all_services()
 
+@app.route('/get_service/<int:service_id>', methods=['GET'])
+def get_service_route(service_id):
+    """
+    Route to fetch all services
+    """
+    return get_service_by_id(service_id)
+
+
+
 # Channel management routes
 @app.route('/channel_registration', methods=['POST'])
 def channel_registration_route():
@@ -171,6 +176,10 @@ def join_community_route(channel_id):
     """
     return join_community(channel_id)
 
+@app.route('/get_all_members/<int:channel_id>', methods=['GET'])
+def get_members_route(channel_id):
+    return get_all_members(channel_id)
+
 @app.route('/post_in_channel/<int:channel_id>', methods=['POST'])
 def post_in_channel_route(channel_id):
     """
@@ -192,14 +201,23 @@ def add_commentController_route(post_id):
     """
     return add_commentController(post_id)
 
-@app.route('/get_post_details/<int:channel_id>', methods=['POST'])
-def get_post_detailsController_route(channel_id):
+@app.route('/get_post_details/<int:post_id>', methods=['POST'])
+# get post_details rout
+def get_post_detailsController_route(post_id):
     """
     Route to fetch details of a specific post
     """
-    return get_post_detailsController(channel_id)
+    return get_post_detailsController(post_id)
 
-@app.route('/get_post_like_comment_details/<int:post_id>', methods=['POST'])
+@app.route('/fetch_post_details_by_channel/<int:channel_id>', methods=['POST'])
+# get post_details rout
+def fetch_post_details_by_channel_route(channel_id):
+    """
+    Route to fetch details of a specific post
+    """
+    return fetch_post_details_by_channel(channel_id)
+
+@app.route('/get_post_like_comment_details/<int:post_id>', methods=['GET'])
 def get_post_like_comment_detailsController_route(post_id):
     """
     Route to fetch likes and comments details of a specific post

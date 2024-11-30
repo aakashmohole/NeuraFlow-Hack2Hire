@@ -93,64 +93,91 @@ def add_comment(post_id, user_id, comment):
         traceback.print_exc()
         return "An error occurred while adding the comment"
 
-# def get_post_details(channel_id):
-#     try:
-#         conn = get_db_connection()
-#         cursor = conn.cursor()
+def get_post_details(post_id):
+    """
+    Fetch post details with total comments and list of comments.
 
-#         # Fetch post details
-#         cursor.execute("""
-#             SELECT p.post_id, p.channel_id, p.user_id, p.content, p.created_at, COUNT(l.like_id) AS likes_count
-#             FROM posts p
-#             JOIN channels c ON c.channel_id = p.channel_id
-#             WHERE c.channel_id = %s;
-#         """, (channel_id,))
-#         post = cursor.fetchone()
-
-#         # Fetch comments
-#         cursor.execute("""
-#             SELECT c.comment_id, c.user_id, c.comment, c.created_at
-#             FROM comments c
-#             WHERE c.post_id = %s
-#             ORDER BY c.created_at ASC
-#         """, (post_id,))
-#         comments = cursor.fetchall()
-
-#         cursor.close()
-#         conn.close()
-
-#         return post, comments
-#     except Exception as e:
-#         traceback.print_exc()
-#         return None, None
-
-
-def get_post_details(channel_id):
+    :param post_id: The ID of the post.
+    :return: Tuple containing post details and comments.
+    """
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Fetch post details along with likes and comments
+        # Fetch post details and total number of comments
         cursor.execute("""
-            SELECT p.post_id, p.channel_id, p.user_id, p.content, p.created_at, COUNT(l.like_id) AS likes_count
+            SELECT p.post_id, p.channel_id, p.user_id, p.content, p.created_at, 
+                   COUNT(c.comment_id) AS total_comments
             FROM posts p
-            JOIN channels ch ON ch.channel_id = p.channel_id
-            LEFT JOIN likes l ON l.post_id = p.post_id
-            WHERE ch.channel_id = %s
+            LEFT JOIN comments c ON c.post_id = p.post_id
+            WHERE p.post_id = %s
+            GROUP BY p.post_id, p.channel_id, p.user_id, p.content, p.created_at;
+        """, (post_id,))
+        post = cursor.fetchone()
+
+        if not post:
+            return None, []
+
+        # Fetch comments
+        cursor.execute("""
+            SELECT c.comment_id, c.user_id, c.comment, c.created_at
+            FROM comments c
+            WHERE c.post_id = %s
+            ORDER BY c.created_at ASC;
+        """, (post_id,))
+        comments = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        return post, comments
+    except Exception as e:
+        traceback.print_exc()
+        return None, []
+
+def get_post_details_by_channel(channel_id):
+    """
+    Fetch post details by channel_id with total comments and list of comments.
+
+    :param channel_id: The ID of the channel.
+    :return: Tuple containing post details and comments.
+    """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Fetch post details and total number of comments using channel_id
+        cursor.execute("""
+            SELECT p.post_id, p.channel_id, p.user_id, p.content, p.created_at, 
+                   COUNT(c.comment_id) AS total_comments
+            FROM posts p
+            LEFT JOIN comments c ON c.post_id = p.post_id
+            WHERE p.channel_id = %s
             GROUP BY p.post_id, p.channel_id, p.user_id, p.content, p.created_at;
         """, (channel_id,))
         post = cursor.fetchone()
 
-        print(post)
-        
+        if not post:
+            return None, []
+
+        post_id = post[0]  # Extract post_id from the fetched post details
+
+        # Fetch comments using the post_id
+        cursor.execute("""
+            SELECT c.comment_id, c.user_id, c.comment, c.created_at
+            FROM comments c
+            WHERE c.post_id = %s
+            ORDER BY c.created_at ASC;
+        """, (post_id,))
+        comments = cursor.fetchall()
+
         cursor.close()
         conn.close()
 
-        return post
+        return post, comments
     except Exception as e:
         traceback.print_exc()
-        return None
-
+        return None, []
 
 def get_total_likes(post_id):
     try:

@@ -40,6 +40,51 @@ def get_all_services():
     cur = conn.cursor()
     cur.execute("SELECT * FROM userservices")
     services = cur.fetchall()
+
+    if not services:
+        return None
+
+    results = []
+
+    for row in services:
+        results.append({
+            "service_id":row[0],
+            "title" : row[2],
+            "category" : row[3],
+            "skills" : row[5],
+            "description" : row[7],
+            "photo": row[9],
+        })
+
+    return results
+
     cur.close()
     conn.close()
     return services
+
+
+def get_service_id(service_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    if not service_id:
+        return None
+
+    cur.execute("SELECT * FROM userservices WHERE service_id=%s",(service_id,))
+    service = cur.fetchone()
+
+    result = ({
+        "service_id" : service[0],
+        "title" : service[2],
+        "category" : service[3],
+        "sub_category" : service[4],
+        "skills" : service[5],
+        "pricing" : service[6],
+        "description": service[7],
+        "faq" : service[8],
+        "photo" : service[9]
+    })
+
+    return result
+
+
