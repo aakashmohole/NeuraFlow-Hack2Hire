@@ -12,6 +12,28 @@ body {
   opacity: 0;
 }
 
+
+/* Keyframes for continuous left-to-right scroll */
+@keyframes scroll-left {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.scrolling-container {
+    display: flex;
+    animation: scroll-left 20s linear infinite;
+}
+
+.profile-card {
+    min-width: 250px;
+    margin-right: 16px;
+}
+
+=======
 /* Keyframes for continuous left-to-right scroll */
 @keyframes scroll-left {
   0% {

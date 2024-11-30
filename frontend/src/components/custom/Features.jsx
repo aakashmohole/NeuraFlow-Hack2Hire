@@ -4,9 +4,17 @@ import { BackgroundBeamsWithCollision } from "../ui/BackgroundBeam";
 export function Features() {
   return (
     <>
+
+      <BackgroundBeamsWithCollision>
+        <div className="w-full h-screen flex flex-col justify-center items-center bg-transparent z-10">
+          <h2 className="text-white my-16 font-bold text-5xl bg-blue-500 p-2 rounded-md -mb-2">
+
       <BackgroundBeamsWithCollision className="h-full">
         <div className="w-full h-auto md:h-screen flex flex-col justify-between md:justify-center items-center bg-transparent">
+
           <h2 className="text-whiteb font-bold text-5xl bg-blue-500 p-2 rounded-md -mb-2">
+
+          <h2 className="text-white font-bold text-5xl bg-blue-500 p-2 rounded-md -mb-2">
             Features
           </h2>
           <HoverEffect items={projects} className="max-w-5xl mx-auto" />

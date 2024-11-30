@@ -23,6 +23,10 @@ import Events from "./pages/Events/Events";
 import FreelancerRouteProvider from "./components/FreelancerRouteProvider";
 import SingleService from "./pages/Client/SingleService";
 
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+
+
 function App() {
   const router = createBrowserRouter([
     {

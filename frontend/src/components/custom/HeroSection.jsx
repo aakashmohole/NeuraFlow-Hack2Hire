@@ -25,7 +25,11 @@ export function HeroSection() {
   return (
     <>
       <Header />
+<<<<<<< HEAD
+      <section className="w-full h-screen flex justify-center items-center">
+=======
       <section className="w-full h-screen bg-slate-950 flex justify-center items-center">
+>>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
         <BackgroundLines className="flex items-center justify-center w-full flex-col px-4">
           <img
             src={GridImg}
