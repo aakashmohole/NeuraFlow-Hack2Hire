@@ -1,86 +1,111 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/custom/Header";
-
-const projectData = [
-  {
-    id: 1,
-    title: "UI Design Project",
-    category: "Recommended",
-    budget: "$500",
-    description: "Design a modern UI for an e-commerce app.",
-  },
-  {
-    id: 2,
-    title: "UI Design Project",
-    category: "Recommended",
-    budget: "$500",
-    description: "Design a modern UI for an e-commerce app.",
-  },
-  {
-    id: 2,
-    title: "Full-Stack Development",
-    category: "Recent",
-    budget: "$1200",
-    description: "Build a full-stack solution for a SaaS platform.",
-  },
-  {
-    id: 3,
-    title: "Logo Design",
-    category: "Saved",
-    budget: "$150",
-    description: "Create a logo for a tech startup.",
-  },
-  // Add more projects as needed
-];
-
-const ProjectCard = ({ title, budget, description }) => (
-  <motion.div
-    className="bg-gray-800 p-6 rounded-lg shadow-lg text-gray-200 hover:bg-gray-700 transition duration-200"
-    whileHover={{ scale: 1.05 }}
-    transition={{ type: "spring", stiffness: 300 }}
-  >
-    <h3 className="text-xl font-bold">{title}</h3>
-    <p className="text-sm text-gray-400 my-2">{description}</p>
-    <div className="flex justify-between items-center">
-      <span className="text-blue-400 font-semibold">{budget}</span>
-      <button className="text-sm text-white bg-blue-600 px-3 py-1 rounded-md hover:bg-blue-500">
-        View Details
-      </button>
-    </div>
-  </motion.div>
-);
-
-const ProjectSection = ({ title, projects }) => (
-  <section>
-    <motion.h2
-      className="text-2xl font-bold text-blue-400 mb-4"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    >
-      {title}
-    </motion.h2>
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {projects.map((project) => (
-        <ProjectCard key={project.id} {...project} />
-      ))}
-    </div>
-  </section>
-);
+import ProjectCard from "../components/custom/Explore/Card";
+import { getProjects, getRecommendedProjects } from "../api/userApi";
+import LoadingSkeleton from "../components/custom/LoadingSkeleton";
 
 export default function ExploreProjects() {
-  const [selectedTab, setSelectedTab] = useState("Recommended");
+  const [selectedTab, setSelectedTab] = useState("Recent");
+  const [search, setSearch] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [budget, setBudget] = useState("");
+  const [rateType, setRateType] = useState("");
+  const [projectData, setProjectData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [savedProjects, setSavedProjects] = useState([]);
 
-  const filteredProjects = projectData.filter(
-    (project) => project.category === selectedTab
-  );
+  useEffect(() => {
+    if (selectedTab === "Recent") {
+      fetchProjects();
+    } else if (selectedTab === "Saved") {
+      const saved = projectData.filter((project) =>
+        savedProjects.includes(project.project_id)
+      );
+      setProjectData(saved);
+    } else if (selectedTab === "Recommended") {
+      getRecommendProject();
+    }
+  }, [selectedTab, savedProjects]);
+
+  const toggleSavedProject = (projectId) => {
+    setSavedProjects((prevSaved) => {
+      const updatedSaved = prevSaved.includes(projectId)
+        ? prevSaved.filter((id) => id !== projectId)
+        : [...prevSaved, projectId];
+      console.log("Updated saved projects:", updatedSaved);
+      return updatedSaved;
+    });
+  };
+
+  const fetchProjects = async () => {
+    try {
+      const { data } = await getProjects(setLoading);
+      if (data && data[0]) {
+        setProjectData(data[0]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+    }
+  };
+
+  const getRecommendProject = async () => {
+    const { data, error } = await getRecommendedProjects(setLoading);
+
+    if (data) {
+      console.log(data.recommendations);
+      // setProjectData(data.recommendations);
+    }
+  };
+
+  // console.log(projectData);
+
+  const filteredProjects = projectData
+    ?.filter((project) => {
+      if (
+        selectedTab === "Saved" &&
+        !savedProjects.includes(project.project_id)
+      ) {
+        return false;
+      }
+      return true;
+    })
+    .filter((project) => {
+      if (search) {
+        return (
+          project.title.toLowerCase().includes(search.toLowerCase()) ||
+          project.skills.some((skill) =>
+            skill.toLowerCase().includes(search.toLowerCase())
+          )
+        );
+      }
+      return true;
+    })
+    .filter((project) => {
+      if (budget === "Less than $500") return project?.price < 500;
+      if (budget === "Between $100 to $500")
+        return project?.price >= 100 && project?.price <= 500;
+      if (budget === "$500+") return project?.price > 500;
+      return true;
+    })
+    .filter((project) =>
+      selectedLevel === "" ? true : project?.level === selectedLevel
+    )
+    .filter((project) =>
+      rateType === "" ? true : project.work_type === rateType
+    );
+
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  console.log(projectData);
 
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 text-white py-12 px-6">
-        {/* Page Header */}
+      <div className="w-full min-h-screen bg-gradient-to-b from-purple-950 to-slate-950 text-white py-12 px-6">
         <div className="text-center mb-12 mt-20">
           <motion.h1
             className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600"
@@ -94,17 +119,15 @@ export default function ExploreProjects() {
             Browse curated projects and find the perfect match to elevate your
             freelancing journey.
           </p>
-          <div>
-            <input
-              type="text"
-              className="bg-gray-800 my-4 rounded-md px-4 py-2"
-              placeholder="Search for projects..."
-            />
-          </div>
+          <input
+            type="text"
+            className="bg-gray-800 my-4 rounded-md px-4 py-2 w-full max-w-md mx-auto"
+            placeholder="Search for projects..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-
-        {/* Tab Selection */}
-        <div className="flex justify-center space-x-8 mb-8">
+        <div className="flex justify-center space-x-8 mb-4">
           {["Recommended", "Recent", "Saved"].map((tab) => (
             <button
               key={tab}
@@ -119,10 +142,54 @@ export default function ExploreProjects() {
             </button>
           ))}
         </div>
+        <div className="flex justify-center space-x-4 mb-8">
+          <select
+            className="bg-gray-800 text-gray-300 p-2 rounded-md"
+            value={selectedLevel}
+            onChange={(e) => setSelectedLevel(e.target.value)}
+          >
+            <option value="">All Levels</option>
+            <option value="Begineer">Begineer</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
 
-        {/* Project Sections */}
+          <select
+            className="bg-gray-800 text-gray-300 p-2 rounded-md"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+          >
+            <option value="All">All Budgets</option>
+            <option value="Less than $500">Less than $100</option>
+            <option value="Between $100 to $500">$100 to $500</option>
+            <option value="$500+">$500+</option>
+            {/* Add more countries as needed */}
+          </select>
+          <select
+            className="bg-gray-800 text-gray-300 p-2 rounded-md"
+            value={rateType}
+            onChange={(e) => setRateType(e.target.value)}
+          >
+            <option value="">Both</option>
+            <option value="Fixed Rate">Fixed Rate</option>
+            <option value="Hourly Rate">Hourly Rate</option>
+            {/* Add more countries as needed */}
+          </select>
+        </div>
+
         <div className="max-w-7xl mx-auto">
-          <ProjectSection title={selectedTab} projects={filteredProjects} />
+          <div className="w-full flex flex-col justify-center items-center">
+            <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+              {filteredProjects.map((project) => (
+                <ProjectCard
+                  key={project.project_id}
+                  {...project}
+                  toggleSave={() => toggleSavedProject(project.project_id)}
+                  isSaved={savedProjects.includes(project.project_id)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

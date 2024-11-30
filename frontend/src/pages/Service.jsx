@@ -1,4 +1,12 @@
-<<<<<<< HEAD
+
+import React, { useState } from "react";
+import OverviewStep from "../components/custom/Services/OverviewStep";
+import PricingStep from "../components/custom/Services/PricingStep";
+import DescriptionStep from "../components/custom/Services/DescriptionStep";
+import FAQStep from "../components/custom/Services/FAQStep";
+import GalleryStep from "../components/custom/Services/GalleryStep";
+import PublishStep from "../components/custom/Services/PublishStep";
+
 import ServiceCard from "../components/custom/Services/ServiceCard"
 
 
@@ -66,48 +74,36 @@ const Service = () => {
   ]
 
 
-=======
 import ServiceCard from "../components/custom/Services/ServiceCard";
 
-const Service = () => {
-  const serviceData1 = [
-    {
-      id: 1,
-      title: " 1. Set Your Hourly Rate",
-      description:
-        "Define your hourly rate for transparency and consistency with clients.",
+const ProjectSubmission = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
+    overview: {
+      service_title: "",
+      category: "",
+      skills: [],
     },
-    {
-      id: 2,
-      title: " 2. Create Service Packages",
-      description:
-        "Set up different service packages (basic, standard, premium) to give clients options.",
+    pricing: {
+      basePrice: "",
+      packageDetails: "",
     },
-    {
-      id: 3,
-      title: "3. Add Project Highlights",
-      description:
-        "Showcase your previous work to demonstrate your skills and style.",
+    description: {
+      detailedDescription: "",
+      highlights: "",
     },
-  ];
+    faq: [{ question: "", answer: "" }],
+    gallery: [],
+    agreeToTerms: false,
+  });
 
-  const serviceData2 = [
-    {
-      title: "Attract New Clients",
-      description:
-        "Create a professional display that brings clients directly to you.",
-    },
-    {
-      title: "Boost Your Credibility",
-      description:
-        "Establish trust by offering transparent services and pricing.",
-    },
-    {
-      title: "Organize Your Offerings",
-      description:
-        "Keep your services, packages, and rates organized in one place.",
-    },
-  ];
+  const handleNext = () => {
+    if (currentStep < 6) setCurrentStep(currentStep + 1);
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
+  };
 
   const serviceData3 = [
     {
@@ -140,22 +136,74 @@ const Service = () => {
         "Showcase positive feedback from past clients to build credibility.",
     },
   ];
->>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
 
-  return (
-    <>
-      <section className="px-8 py-20 lg:px-32 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-center">
-        <h1 class="text-5xl font-extrabold mb-4 animate-fade-in">
-          Welcome to Your Services
-        </h1>
-        <p className="text-lg text-gray-200 mb-10 animate-fade-in">
-          Showcase your skills, set your hourly rates, create unique packages,
-          and attract clients!
-        </p>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg text-lg font-semibold animate-fade-in">
-          Let’s Get Started
-        </button>
-      </section>
+
+  const handleFormUpdate = (step, data) => {
+    setFormData((prev) => ({
+      ...prev,
+      [step]: { ...prev[step], ...data },
+    }));
+  };
+
+
+  const handleSubmit = () => {
+    if (formData.agreeToTerms) {
+      // Call API with `formData`
+      console.log("Form Data Submitted:", formData);
+    } else {
+      alert("Please agree to the terms and conditions before submitting.");
+    }
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <OverviewStep
+            data={formData.overview}
+            onUpdate={(data) => handleFormUpdate("overview", data)}
+          />
+        );
+      case 2:
+        return (
+          <PricingStep
+            data={formData.pricing}
+            onUpdate={(data) => handleFormUpdate("pricing", data)}
+          />
+        );
+      case 3:
+        return (
+          <DescriptionStep
+            data={formData.description}
+            onUpdate={(data) => handleFormUpdate("description", data)}
+          />
+        );
+      case 4:
+        return (
+          <FAQStep
+            data={formData.faq}
+            onUpdate={(data) => handleFormUpdate("faq", data)}
+          />
+        );
+      case 5:
+        return (
+          <GalleryStep
+            data={formData.gallery}
+            onUpdate={(data) => handleFormUpdate("gallery", data)}
+          />
+        );
+      case 6:
+        return (
+          <PublishStep
+            data={formData.agreeToTerms}
+            onUpdate={(data) => handleFormUpdate("agreeToTerms", data)}
+            onSubmit={handleSubmit}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
       <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
         <div className="text-center mb-10">
@@ -168,13 +216,13 @@ const Service = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-<<<<<<< HEAD
+
           {
             serviceData1.map((data)=> 
               <ServiceCard key={data.id} title={data.title} description={data.description}/>
             )
           }
-=======
+
           {serviceData1.map((data) => (
             <ServiceCard
               key={data.id}
@@ -182,7 +230,7 @@ const Service = () => {
               description={data.description}
             />
           ))}
->>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
+
         </div>
       </section>
       <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
@@ -215,14 +263,13 @@ const Service = () => {
           </p>
         </div>
         <div className="flex flex-col md:flex-row md:space-x-8 space-y-6 md:space-y-0">
-<<<<<<< HEAD
           {
             serviceData2.map((data,index)=> 
             
               <ServiceCard title={data.title} description={data.description} key={index} className="bg-black"/>
             )
           }
-=======
+
           {serviceData2.map((data, index) => (
             <ServiceCard
               title={data.title}
@@ -231,7 +278,6 @@ const Service = () => {
               className="bg-black"
             />
           ))}
->>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
         </div>
       </section>
 
@@ -246,7 +292,7 @@ const Service = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-<<<<<<< HEAD
+
          {
            serviceData3.map((data,index)=> 
             <ServiceCard title={data.title} description={data.description} key={index}/>
@@ -256,7 +302,6 @@ const Service = () => {
       </section>
 
      
-=======
           {serviceData3.map((data, index) => (
             <ServiceCard
               title={data.title}
@@ -267,7 +312,7 @@ const Service = () => {
         </div>
       </section>
 
->>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
+
       <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-fuchsia-500">
@@ -307,81 +352,59 @@ const Service = () => {
               <p className="text-gray-400 text-center">Full-Stack Developer</p>
             </div>
 
-            <div className="profile-card bg-gray-800 p-6 rounded-lg shadow-lg">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Freelancer 3"
-                className="rounded-full w-24 h-24 mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold text-center">
-                Freelancer 3
-              </h3>
-              <p className="text-gray-400 text-center">SEO Specialist</p>
+  return (
+    <div className="w-full  bg-slate-950">
+      <div className="container mx-auto max-w-6xl px-4 py-8 space-y-6">
+        <div className="flex justify-between items-center bg-slate-950 max-w-3xl mx-auto">
+          {[
+            "Overview",
+            "Pricing",
+            "Description",
+            "FAQ's",
+            "Gallery",
+            "Publish",
+          ].map((label, index) => (
+            <div key={index} className="flex flex-col items-center w-1/6">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  currentStep === index + 1
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-300"
+                }`}
+              >
+                {index + 1}
+              </div>
+              <p className="mt-2 text-sm">{label}</p>
             </div>
-
-            <div className="profile-card bg-gray-800 p-6 rounded-lg shadow-lg">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Freelancer 4"
-                className="rounded-full w-24 h-24 mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold text-center">
-                Freelancer 4
-              </h3>
-              <p className="text-gray-400 text-center">Content Writer</p>
-            </div>
-
-            <div className="profile-card bg-gray-800 p-6 rounded-lg shadow-lg">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Freelancer 1"
-                className="rounded-full w-24 h-24 mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold text-center">
-                Freelancer 1
-              </h3>
-              <p className="text-gray-400 text-center">
-                Expert in Graphic Design
-              </p>
-            </div>
-            <div className="profile-card bg-gray-800 p-6 rounded-lg shadow-lg">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Freelancer 2"
-                className="rounded-full w-24 h-24 mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold text-center">
-                Freelancer 2
-              </h3>
-              <p className="text-gray-400 text-center">Full-Stack Developer</p>
-            </div>
-            <div className="profile-card bg-gray-800 p-6 rounded-lg shadow-lg">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Freelancer 3"
-                className="rounded-full w-24 h-24 mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold text-center">
-                Freelancer 3
-              </h3>
-              <p className="text-gray-400 text-center">SEO Specialist</p>
-            </div>
-            <div className="profile-card bg-gray-800 p-6 rounded-lg shadow-lg">
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Freelancer 4"
-                className="rounded-full w-24 h-24 mx-auto mb-4"
-              />
-              <h3 className="text-xl font-semibold text-center">
-                Freelancer 4
-              </h3>
-              <p className="text-gray-400 text-center">Content Writer</p>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
-    </>
+        <div className="w-full h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-lg"></div>
+
+        {/* Dynamic Form Section */}
+        {renderStep()}
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between">
+          <button
+            onClick={handleBack}
+            disabled={currentStep === 1}
+            className="py-2 px-4 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={currentStep === 6}
+            className="py-2 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      {/* Step Tracker */}
+    </div>
   );
 };
 
-export default Service;
+export default ProjectSubmission;

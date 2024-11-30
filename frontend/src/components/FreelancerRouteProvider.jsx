@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
+const AdminRouteProvider = ({ children }) => {
   const user = useSelector((state) => state.auth.userInfo);
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("userInfo"));
-  //   if (user) {
-  //     setUser(user);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (user && user.account_type === "client") {
+      navigate("/client");
+    }
+  }, [user]);
+
   return (
     <>
-      {user ? (
+      {user && user.account_type === "freelancer" ? (
         children
       ) : (
         <>
@@ -35,4 +34,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export default AuthProvider;
+export default AdminRouteProvider;
