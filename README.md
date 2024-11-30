@@ -125,6 +125,13 @@ Open your favorite Terminal and run these commands:
 4. Participate in forums and register for events.  
 
 ---
+## **Feature Enhancement**
+
+### **Chat-Bot Integration:** 
+This feature is under development to support our Recommendation System and enable smooth, interactive communication through a standard chat interface.
+
+### **Collaboration Tool:** 
+We are developing an advanced collaboration tool to streamline teamwork and enhance productivity.
 
 ## 📆 **Development Timeline**
 
