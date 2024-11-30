@@ -1,11 +1,26 @@
 
+# flask
+# flask_cors
+# Werkzeug
+# PyJWT
+# psycopg2
+# python-dotenv
+# cloudinary
+# pandas
+# numpy
+# scikit-learn
+
 flask
 flask_cors
+traceback
 Werkzeug
 PyJWT
 psycopg2
 python-dotenv
+logging
 cloudinary
 pandas
-numpy
+json
+numpy 
 scikit-learn
+pickle
