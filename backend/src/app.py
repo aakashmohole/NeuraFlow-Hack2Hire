@@ -192,12 +192,12 @@ def add_commentController_route(post_id):
     """
     return add_commentController(post_id)
 
-@app.route('/get_post_details/<int:post_id>', methods=['POST'])
-def get_post_detailsController_route(post_id):
+@app.route('/get_post_details/<int:channel_id>', methods=['POST'])
+def get_post_detailsController_route(channel_id):
     """
     Route to fetch details of a specific post
     """
-    return get_post_detailsController(post_id)
+    return get_post_detailsController(channel_id)
 
 @app.route('/get_post_like_comment_details/<int:post_id>', methods=['POST'])
 def get_post_like_comment_detailsController_route(post_id):

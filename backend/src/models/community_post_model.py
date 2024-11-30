@@ -93,37 +93,63 @@ def add_comment(post_id, user_id, comment):
         traceback.print_exc()
         return "An error occurred while adding the comment"
 
-def get_post_details(post_id):
+# def get_post_details(channel_id):
+#     try:
+#         conn = get_db_connection()
+#         cursor = conn.cursor()
+
+#         # Fetch post details
+#         cursor.execute("""
+#             SELECT p.post_id, p.channel_id, p.user_id, p.content, p.created_at, COUNT(l.like_id) AS likes_count
+#             FROM posts p
+#             JOIN channels c ON c.channel_id = p.channel_id
+#             WHERE c.channel_id = %s;
+#         """, (channel_id,))
+#         post = cursor.fetchone()
+
+#         # Fetch comments
+#         cursor.execute("""
+#             SELECT c.comment_id, c.user_id, c.comment, c.created_at
+#             FROM comments c
+#             WHERE c.post_id = %s
+#             ORDER BY c.created_at ASC
+#         """, (post_id,))
+#         comments = cursor.fetchall()
+
+#         cursor.close()
+#         conn.close()
+
+#         return post, comments
+#     except Exception as e:
+#         traceback.print_exc()
+#         return None, None
+
+
+def get_post_details(channel_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Fetch post details
+        # Fetch post details along with likes and comments
         cursor.execute("""
             SELECT p.post_id, p.channel_id, p.user_id, p.content, p.created_at, COUNT(l.like_id) AS likes_count
             FROM posts p
-            LEFT JOIN likes l ON p.post_id = l.post_id
-            WHERE p.post_id = %s
-            GROUP BY p.post_id
-        """, (post_id,))
+            JOIN channels ch ON ch.channel_id = p.channel_id
+            LEFT JOIN likes l ON l.post_id = p.post_id
+            WHERE ch.channel_id = %s
+            GROUP BY p.post_id, p.channel_id, p.user_id, p.content, p.created_at;
+        """, (channel_id,))
         post = cursor.fetchone()
 
-        # Fetch comments
-        cursor.execute("""
-            SELECT c.comment_id, c.user_id, c.comment, c.created_at
-            FROM comments c
-            WHERE c.post_id = %s
-            ORDER BY c.created_at ASC
-        """, (post_id,))
-        comments = cursor.fetchall()
-
+        print(post)
+        
         cursor.close()
         conn.close()
 
-        return post, comments
+        return post
     except Exception as e:
         traceback.print_exc()
-        return None, None
+        return None
 
 
 def get_total_likes(post_id):
