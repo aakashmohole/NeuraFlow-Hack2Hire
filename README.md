@@ -109,6 +109,45 @@ Open your favorite Terminal and run these commands:
 ```
 ---
 
+### **Backend Setup Instructions**
+
+### 1) Ensure Python is Installed  
+Make sure Python is installed on your system. You can download it from [Python's official website](https://www.python.org/downloads/).  
+
+### 2) Clone the Repository  
+```bash
+git clone <repository-url>
+```
+
+### 3) Navigate to the Backend Directory
+```bash
+cd backend
+```
+### 4) Install Required Dependencies 
+```bash
+pip install -r requirements.txt
+```
+### 5) Navigate to the Source Folder
+```bash
+ cd src
+```
+
+### 6) 6) Start the Backend Application
+```bash
+ python app.py
+```
+
+### **Database Configuration**
+
+### 1) Update the `.env` File  
+Add the following environment variables to your `.env` file:  
+
+```env
+DATABASE_URL=YOUR-DB-URL
+SECRET_KEY=YOUR-KEY
+```
+
+
 ## 📊 **Workflow Overview**
 
 ### **Client Process**
