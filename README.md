@@ -69,8 +69,9 @@
 - **Python:** Core backend logic and machine learning integration.  
 
 ### **Database**
-- **PostgreSQL:** Powerful relational database for data management.  
-
+- **PostgreSQL:** Powerful relational database for data management.
+- **Neon DB:** Hosted Database on NeonDB Cloud
+  
 ### **Machine Learning**
 - **K-Means Clusturing:** For building and recommendation model.    
 
