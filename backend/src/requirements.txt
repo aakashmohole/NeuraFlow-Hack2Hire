@@ -1,11 +1,11 @@
 
 flask==2.1.2
 flask_cors
-Werkzeug==2.1.2
-PyJWT==2.5.0
-psycopg2==2.9.3
-python-dotenv==0.19.2
-cloudinary==1.29.0
-pandas==1.5.3
-numpy==1.23.4
-scikit-learn==1.2.0
+Werkzeug
+PyJWT
+psycopg2
+python-dotenv
+cloudinary
+pandas
+numpy
+scikit-learn

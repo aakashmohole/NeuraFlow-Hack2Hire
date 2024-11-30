@@ -233,4 +233,5 @@ def get_all_channels_route():
 
 # Start the Flask server in debug mode
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=False)
