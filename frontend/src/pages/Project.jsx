@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Header from "../components/custom/Header";
 import ProjectCard from "../components/custom/Explore/Card";
-import { getProjects } from "../api/userApi";
+import { getProjects, getRecommendedProjects } from "../api/userApi";
 import LoadingSkeleton from "../components/custom/LoadingSkeleton";
 
 export default function ExploreProjects() {
-  const [selectedTab, setSelectedTab] = useState("Recommended");
+  const [selectedTab, setSelectedTab] = useState("Recent");
   const [search, setSearch] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -24,6 +24,8 @@ export default function ExploreProjects() {
         savedProjects.includes(project.project_id)
       );
       setProjectData(saved);
+    } else if (selectedTab === "Recommended") {
+      getRecommendProject();
     }
   }, [selectedTab, savedProjects]);
 
@@ -47,6 +49,17 @@ export default function ExploreProjects() {
       console.error("Failed to fetch projects:", error);
     }
   };
+
+  const getRecommendProject = async () => {
+    const { data, error } = await getRecommendedProjects(setLoading);
+
+    if (data) {
+      console.log(data.recommendations);
+      // setProjectData(data.recommendations);
+    }
+  };
+
+  // console.log(projectData);
 
   const filteredProjects = projectData
     ?.filter((project) => {
@@ -86,6 +99,8 @@ export default function ExploreProjects() {
   if (loading) {
     return <LoadingSkeleton />;
   }
+
+  console.log(projectData);
 
   return (
     <>
@@ -138,17 +153,7 @@ export default function ExploreProjects() {
             <option value="Intermediate">Intermediate</option>
             <option value="Advanced">Advanced</option>
           </select>
-          <select
-            className="bg-gray-800 text-gray-300 p-2 rounded-md"
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-          >
-            <option value="">All Countries</option>
-            <option value="USA">USA</option>
-            <option value="India">India</option>
-            <option value="UK">UK</option>
-            {/* Add more countries as needed */}
-          </select>
+
           <select
             className="bg-gray-800 text-gray-300 p-2 rounded-md"
             value={budget}

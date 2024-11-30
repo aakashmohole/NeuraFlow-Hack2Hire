@@ -8,6 +8,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { CiMenuFries } from "react-icons/ci";
 import MobileMenu from "./MobileMenu";
 
+import Logo from "../../assets/Logo.jpeg";
+
 const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState();
@@ -56,7 +58,13 @@ const Header = () => {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="w-full relative flex h-14 items-center justify-between gap-3 rounded-2xl bg-gray-900/90 px-3 before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:border before:border-transparent before:[background:linear-gradient(to_right,theme(colors.gray.800),theme(colors.gray.700),theme(colors.gray.800))_border-box] before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] after:absolute after:inset-0 after:-z-10 after:backdrop-blur-sm">
           {/* Site branding */}
-          <div className="text-white w-full">Logo</div>
+          <div className="text-white w-full ml-2">
+            <img
+              src={Logo}
+              alt="NeuraFlow logo"
+              className="w-10 h-10 rounded-full"
+            />
+          </div>
 
           {/* Desktop sign in links */}
           <ul
@@ -109,7 +117,7 @@ const Header = () => {
                 </Link>
               ) : (
                 <Link
-                  to="/service"
+                  to="/services"
                   className="w-40 hover:text-blue-400 text-center"
                 >
                   Create Service

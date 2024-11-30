@@ -16,6 +16,12 @@ import CommunityDashboard from "./pages/Community/CommunityDashboard";
 import ChannelPage from "./pages/Community/ChannelPage";
 import Webinar from "./pages/Webinar";
 import WebinarDetails from "./pages/WebinarDetails";
+import ClientSingleProject from "./pages/Client/ClientSingleProject";
+import ClientDashboard from "./pages/Client/ClientDashboard";
+import AdminRouteProvider from "./components/AdminRouteProvider";
+import Events from "./pages/Events/Events";
+import FreelancerRouteProvider from "./components/FreelancerRouteProvider";
+import SingleService from "./pages/Client/SingleService";
 
 function App() {
   const router = createBrowserRouter([
@@ -28,14 +34,22 @@ function App() {
       element: (
         <AuthProvider>
           <div className="w-full h-screen bg-slate-950 items-center">
-            <ExploreProjects />
+            <FreelancerRouteProvider>
+              <ExploreProjects />
+            </FreelancerRouteProvider>
           </div>
         </AuthProvider>
       ),
     },
     {
       path: "/services",
-      element: <Service />,
+      element: (
+        <AuthProvider>
+          <FreelancerRouteProvider>
+            <Service />
+          </FreelancerRouteProvider>
+        </AuthProvider>
+      ),
     },
     {
       path: "/register",
@@ -47,11 +61,23 @@ function App() {
     },
     {
       path: "/project/:id",
-      element: <SingleProject />,
+      element: (
+        <AuthProvider>
+          <FreelancerRouteProvider>
+            <SingleProject />
+          </FreelancerRouteProvider>
+        </AuthProvider>
+      ),
     },
     {
       path: "/client",
-      element: <FreelancerServices />,
+      element: (
+        <AuthProvider>
+          <AdminRouteProvider>
+            <FreelancerServices />
+          </AdminRouteProvider>
+        </AuthProvider>
+      ),
     },
     {
       path: "/profile",
@@ -79,7 +105,13 @@ function App() {
     },
     {
       path: "/create-project",
-      element: <CreateProject />,
+      element: (
+        <AuthProvider>
+          <AdminRouteProvider>
+            <CreateProject />
+          </AdminRouteProvider>
+        </AuthProvider>
+      ),
     },
     {
       path: "/create-channel",
@@ -112,6 +144,34 @@ function App() {
     {
       path: "/webinar/:id",
       element: <WebinarDetails />,
+    },
+    {
+      path: "/client-dashboard",
+      element: (
+        <AuthProvider>
+          <AdminRouteProvider>
+            <ClientDashboard />
+          </AdminRouteProvider>
+        </AuthProvider>
+      ),
+    },
+    {
+      path: "/client-dashboard/:id",
+      element: (
+        <AuthProvider>
+          <AdminRouteProvider>
+            <ClientSingleProject />
+          </AdminRouteProvider>
+        </AuthProvider>
+      ),
+    },
+    {
+      path: "/client/:id",
+      element: <SingleService />,
+    },
+    {
+      path: "/events",
+      element: <Events />,
     },
   ]);
   return (

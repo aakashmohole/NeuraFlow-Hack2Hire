@@ -1,13 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaUsers } from "react-icons/fa";
 import PageLoader from "../../components/custom/PageLoader";
-import { getChannelById } from "../../api/commnityApi";
+import {
+  getChannelById,
+  getAllMembers,
+  getAllPosts,
+  createPost,
+} from "../../api/commnityApi";
 import { useParams } from "react-router-dom";
+
+const LoadingSkeleton = () => {
+  return (
+    <ul className="space-y-2">
+      {Array.from({ length: 8 }).map((_, index) => (
+        <li className="bg-gray-800 p-4 rounded animate-pulse" key={index}>
+          User {index + 1}
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 const ChannelPage = () => {
   const [activeTab, setActiveTab] = useState("addPost");
   const [channel, setChannel] = useState();
   const [loading, setLoading] = useState(false);
+  const [membersDataLoading, setMembersDataLoading] = useState(false);
+  const [members, setMembers] = useState();
+  const [post, setPost] = useState();
+  const [comments, setComments] = useState([]);
 
   const { id } = useParams();
 
@@ -21,9 +42,38 @@ const ChannelPage = () => {
     }
   };
 
+  const getPosts = async () => {
+    const { data, error } = await getAllPosts(setLoading, id);
+    if (data) {
+      setComments(data.comments[0]);
+      setPost(data.post);
+      console.log(data.comments[0]);
+    }
+    if (error) {
+      console.error(error);
+    }
+  };
+
+  const getAllusers = async () => {
+    const { data, error } = await getAllMembers(setMembersDataLoading, id);
+
+    if (data) {
+      setMembers(data);
+    }
+  };
+
   useEffect(() => {
     getChannel();
+    getPosts();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === "users") {
+      getAllusers();
+    }
+  }, [activeTab]);
+
+  const handleClick = () => {};
 
   if (loading) {
     return <PageLoader />;
@@ -85,12 +135,44 @@ const ChannelPage = () => {
                     />
                   </div>
                   <button
-                    type="submit"
                     className="bg-blue-600 py-2 px-4 rounded text-white hover:bg-blue-700"
+                    onClick={handleClick}
                   >
                     Post
                   </button>
                 </form>
+
+                {/* Post Section */}
+                <div className="mt-8">
+                  <h2 className="text-2xl font-bold mb-4">Post</h2>
+                  {post && (
+                    <div className="bg-gray-800 p-6 rounded mb-6">
+                      <p className="text-gray-200">{post.content}</p>
+                      <p className="text-gray-500 text-sm mt-2">
+                        Posted on: {new Date(post.created_at).toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Comments Section */}
+                  <h3 className="text-xl font-bold mb-2">Comments</h3>
+                  {comments ? (
+                    <ul className="space-y-4 max-w-4xl">
+                      <li
+                        key={comments.comment_id}
+                        className="bg-gray-800 p-4 rounded"
+                      >
+                        <p className="text-gray-300">{comments.comment}</p>
+                        <p className="text-gray-500 text-sm mt-2">
+                          Commented on:{" "}
+                          {new Date(comments.created_at).toLocaleString()}
+                        </p>
+                      </li>
+                    </ul>
+                  ) : (
+                    <p>No comments yet.</p>
+                  )}
+                </div>
               </div>
             )}
 
@@ -98,9 +180,17 @@ const ChannelPage = () => {
               <div>
                 <h2 className="text-2xl font-bold mb-4">Community Members</h2>
                 <ul className="space-y-2">
-                  <li className="bg-gray-800 p-4 rounded">User 1</li>
-                  <li className="bg-gray-800 p-4 rounded">User 2</li>
-                  <li className="bg-gray-800 p-4 rounded">User 3</li>
+                  {membersDataLoading ? (
+                    <LoadingSkeleton />
+                  ) : members ? (
+                    members.map((user, index) => (
+                      <li className="bg-gray-800 p-4 rounded" key={index}>
+                        {user.firstname} {user.lastname}
+                      </li>
+                    ))
+                  ) : (
+                    <p>No one joined this channel yet</p>
+                  )}
                 </ul>
               </div>
             )}

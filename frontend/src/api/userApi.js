@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:5000";
+const baseURL = "https://neuraflow-hack2hire.onrender.com";
 
 export const registerUser = async (data, setLoading) => {
   try {
@@ -96,9 +96,12 @@ export const updateProfilePhoto = async (file, setLoading) => {
 export const getProjects = async (setLoading) => {
   try {
     setLoading(true);
-    const result = await axios.get(`${baseURL}/get_client_projects`, {
-      withCredentials: true,
-    });
+    const result = await axios.get(
+      `${baseURL}/get_all_client_projects_controller`,
+      {
+        withCredentials: true,
+      }
+    );
     return { data: result?.data, error: null };
   } catch (error) {
     const errMsg = error?.response.data.error || "An error occured";
@@ -112,6 +115,21 @@ export const createProject = async (data, setLoading) => {
   try {
     setLoading(true);
     const result = await axios.post(`${baseURL}/create_client_project`, data, {
+      withCredentials: true,
+    });
+    return { data: result?.data, error: null };
+  } catch (error) {
+    const errMsg = error?.response.data.error || "An error occured";
+    return { data: null, error: errMsg };
+  } finally {
+    setLoading(false);
+  }
+};
+
+export const getRecommendedProjects = async (setLoading) => {
+  try {
+    setLoading(true);
+    const result = await axios.get(`${baseURL}/get_user_recommendations`, {
       withCredentials: true,
     });
     return { data: result?.data, error: null };
