@@ -133,7 +133,7 @@ pip install -r requirements.txt
  cd src
 ```
 
-### 6) 6) Start the Backend Application
+### 6) Start the Backend Application
 ```bash
  python app.py
 ```
