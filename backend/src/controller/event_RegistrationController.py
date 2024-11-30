@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from utils.verify_token import verify_token
-from models.event_registration_model import event_registration, get_user_registration_details
+from models.event_registration_model import event_registration, get_user_registration_details, get_all_registration_details
 # Controller for event registration
 def register_event():
     try:
@@ -19,9 +19,10 @@ def register_event():
         lastname = user_details.get("lastname")
         email = user_details.get("email")
         mobile_no = user_details.get("mobile_no")
+        event_id = user_details.get("event_id")
 
         # Call the model function to insert the data
-        success, message = event_registration(user_id, firstname, lastname, email, mobile_no)
+        success, message = event_registration(user_id, firstname, lastname, email, mobile_no, event_id)
         if not success:
             return jsonify({"error": message}), 500
 
@@ -29,3 +30,29 @@ def register_event():
 
     except Exception as e:
         return jsonify({"error": f"An error occurred: {e}"}), 500
+
+
+def get_all_registration_detailsController():
+    try:
+        # Fetch total likes and comments using the helper functions
+        details = get_all_registration_details()
+
+        # Check if both functions succeeded
+        if details is None :
+            return jsonify({
+                "error": "Failed to fetch details. Please try again later."
+            }), 500
+        
+        return jsonify({
+                "firstname": details[0],
+                "lastname": details[1],
+                "email": details[2],
+                "mobile_no": details[3],
+                "event_id": details[4]
+            })
+
+    except Exception as e:
+        # Print the traceback for debugging
+        return jsonify({
+            "error": "An unexpected error occurred. Please try again later."
+        }), 500
