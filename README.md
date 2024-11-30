@@ -19,7 +19,6 @@
 2. **Community Channel**  
    - Post updates or information for freelancers.  
    - Freelancers can react to posts using emojis, fostering engagement.
-   - 
 
 
 ### 🧑‍💻 **Freelancer Features**
@@ -128,10 +127,10 @@ Open your favorite Terminal and run these commands:
 ## **Feature Enhancement**
 
 ### **Chat-Bot Integration:** 
-This feature is under development to support our Recommendation System and enable smooth, interactive communication through a standard chat interface.
+- This feature is under development to support our Recommendation System and enable smooth, interactive communication through a standard chat interface.
 
 ### **Collaboration Tool:** 
-We are developing an advanced collaboration tool to streamline teamwork and enhance productivity.
+- We are developing an advanced collaboration tool to streamline teamwork and enhance productivity.
 
 ## 📆 **Development Timeline**
 
