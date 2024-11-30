@@ -2,7 +2,7 @@
 
 # 🌟 **NeuraFlow - Freelancing Platform And Community Forum**
 
-![NeuraFlow Banner](https://sp-ao.shortpixel.ai/client/to_auto,q_glossy,ret_img,w_1024,h_427/https://pianalytix.com/wp-content/uploads/2020/11/Recommendation-Systems-1024x427.jpg)
+![NeuraFlow Banner](https://github.com/aakashmohole/NeuraFlow-Hack2Hire/blob/main/images/NeuraFlow1.png)
 
 **NeuraFlow** is an AI-powered freelancing platform designed to seamlessly connect clients with the right freelancers. Leveraging machine learning, NeuraFlow ensures precise talent recommendations, fosters collaboration, and builds a dynamic freelancer community.
 
