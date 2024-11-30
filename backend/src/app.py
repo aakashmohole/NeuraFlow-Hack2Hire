@@ -5,7 +5,7 @@ from utils.authentication import login, logout, register
 from controller.profile_UpdateController import get_user_details, update_profile_photo, update_user_details
 from controller.client_ProjectsController import create_client_project, get_client_projects_controller, get_client_project_by_id__controller, get_all_client_projects_controller
 from controller.freelancer_ApplicationsController import apply_for_work_controller
-from controller.event_RegistrationController import register_event
+from controller.event_RegistrationController import register_event, get_all_registration_detailsController
 from controller.recommandationController import get_user_recommendations
 from controller.servicesController import add_services_controller, get_all_services
 from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController,get_all_channels
@@ -73,6 +73,10 @@ def event_registration_route():
 @app.route('/get_user_recommendations', methods=['GET'])
 def get_user_recommendations_route():
     return get_user_recommendations()
+
+@app.route('/get_all_registration_details', methods=['GET'])
+def get_all_registration_detailsController_route():
+    return get_all_registration_detailsController()
 
 
 @app.route('/add_services', methods=['POST'])

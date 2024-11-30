@@ -1,7 +1,7 @@
 from utils.connection import get_db_connection
 
 # Function to insert event registration details
-def event_registration(user_id, firstname, lastname, email, mobile_no):
+def event_registration(user_id, firstname, lastname, email, mobile_no, event_id):
     conn = get_db_connection()
     if not conn:
         return False, "Failed to connect to the database"
@@ -11,9 +11,9 @@ def event_registration(user_id, firstname, lastname, email, mobile_no):
         
         # Insert the registration details into eventRegistration table
         cursor.execute("""
-            INSERT INTO eventRegistration (user_id, firstname, lastname, email, mobile_no)
+            INSERT INTO eventRegistration (user_id, firstname, lastname, email, mobile_no,event_id)
             VALUES (%s, %s, %s, %s, %s)
-        """, (user_id, firstname, lastname, email, mobile_no))
+        """, (user_id, firstname, lastname, email, mobile_no, event_id))
         
         conn.commit()
         return True, "Success"
@@ -35,7 +35,7 @@ def get_user_registration_details(user_id):
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT firstname, lastname, email, mobile_no
+            SELECT firstname, lastname, email, mobile_no, event_id
             FROM users
             WHERE id = %s
         """, (user_id,))
@@ -46,7 +46,40 @@ def get_user_registration_details(user_id):
                 "firstname": result[0],
                 "lastname": result[1],
                 "email": result[2],
-                "mobile_no": result[3]
+                "mobile_no": result[3],
+                "event_id": result[4]
+            }
+        return None
+
+    except Exception:
+        return None
+
+    finally:
+        cursor.close()
+        conn.close()
+        
+# Function to fetch user details from the database
+def get_all_registration_details():
+    conn = get_db_connection()
+    if not conn:
+        return None
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT firstname, lastname, email, mobile_no, event_id
+            FROM users
+
+        """)
+        result = cursor.fetchone()
+
+        if result:
+            return {
+                "firstname": result[0],
+                "lastname": result[1],
+                "email": result[2],
+                "mobile_no": result[3],
+                "event_id": result[4]
             }
         return None
 
