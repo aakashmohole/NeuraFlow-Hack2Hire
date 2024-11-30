@@ -67,21 +67,24 @@ def get_all_registration_details():
     try:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT firstname, lastname, email, mobile_no, event_id
-            FROM users
-
+            SELECT event_id,event_name,description,event_created_date,photo,event_join_link
+            FROM events
         """)
-        result = cursor.fetchone()
+        result = cursor.fetchall()
 
-        if result:
-            return {
-                "firstname": result[0],
-                "lastname": result[1],
-                "email": result[2],
-                "mobile_no": result[3],
-                "event_id": result[4]
-            }
-        return None
+        events = []
+
+        for row in result:
+            events.append({
+                "event_id" : row[0],
+                "event_name" : row[1],
+                "description": row[2],
+                "event_created_date" :row[3],
+                "photo" :row[4],
+                "event_join_link" :row[5]
+            })
+
+        return events if events else None
 
     except Exception:
         return None

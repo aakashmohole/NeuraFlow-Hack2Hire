@@ -125,3 +125,48 @@ def check_community_owner(channel_id):
     except Exception as e:
         traceback.print_exc()  # Debugging
         return None  # Return None in case of an error
+
+
+def get_all_users(channel_id):
+    try:
+
+        print(channel_id)
+        conn = get_db_connection()
+        if not conn:
+            return None  # Return None when there's no connection
+
+        if not channel_id:
+            return None
+
+        cursor = conn.cursor()
+        cursor.execute("""
+        SELECT 
+            u.firstname, 
+            u.lastname
+        FROM 
+            users u
+        JOIN 
+            community_memberships cm ON u.id = cm.user_id
+        JOIN 
+            channels c ON cm.community_id = c.channel_id
+        WHERE 
+            c.channel_id = %s
+        """, (channel_id,)) 
+
+        
+        result = cursor.fetchall()
+        members = []
+
+        for row in result:
+            members.append({
+                "firstname" : row[0],
+                "lastname" : row[1]
+            })
+
+        if not members:
+            return None
+        
+        return members
+    except Exception as e:
+        traceback.print_exc()  # Debugging
+        return None  # Return None in case of an error

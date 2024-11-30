@@ -9,7 +9,7 @@ from controller.event_RegistrationController import register_event, get_all_regi
 from controller.recommandationController import get_user_recommendations
 from controller.servicesController import add_services_controller, get_all_services
 from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController,get_all_channels
-from controller.join_memberController import join_community
+from controller.join_memberController import join_community,get_all_members
 from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController,get_post_like_comment_detailsController
 
 app = Flask(__name__)
@@ -102,6 +102,10 @@ def get_channel_details_by_id_route(channel_id):
 @app.route('/join_community/<int:channel_id>', methods=['POST'])
 def join_community_route(channel_id):
     return join_community(channel_id)
+
+@app.route('/get_all_members/<int:channel_id>', methods=['GET'])
+def get_members_route(channel_id):
+    return get_all_members(channel_id)
 
 @app.route('/post_in_channel/<int:channel_id>', methods=['POST'])
 def post_in_channel_route(channel_id):

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from models.join_member_model import check_membership, add_user_to_community, update_members_count, check_community_owner,check_channel_available
+from models.join_member_model import check_membership, add_user_to_community, update_members_count, check_community_owner,check_channel_available,get_all_users
 from utils.verify_token import verify_token
 import traceback
 
@@ -40,6 +40,29 @@ def join_community(channel_id):
         update_members_count(channel_id)
 
         return jsonify({'message': 'User successfully joined the community'}), 201
+    
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'error': 'An error occurred while processing the request'}), 500
+
+
+
+def get_all_members(channel_id):
+    try :
+        # Get the logged-in user's ID
+        user_id = verify_token()
+        if not user_id:
+            return jsonify({"error": "Invalid or expired token"}), 401
+ 
+        if not user_id or not channel_id:
+            return jsonify({'error': 'User ID and channel ID are required'}), 400
+
+        members = get_all_users(channel_id)
+
+        if not members:
+            return jsonify({"error":  "Failed to fetch members"}),500
+
+        return jsonify(members)
     
     except Exception as e:
         traceback.print_exc()

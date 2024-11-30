@@ -34,22 +34,14 @@ def register_event():
 
 def get_all_registration_detailsController():
     try:
-        # Fetch total likes and comments using the helper functions
-        details = get_all_registration_details()
-
-        # Check if both functions succeeded
-        if details is None :
+        
+        events = get_all_registration_details()
+        if events is None :
             return jsonify({
                 "error": "Failed to fetch details. Please try again later."
             }), 500
         
-        return jsonify({
-                "firstname": details[0],
-                "lastname": details[1],
-                "email": details[2],
-                "mobile_no": details[3],
-                "event_id": details[4]
-            })
+        return jsonify(events)
 
     except Exception as e:
         # Print the traceback for debugging
