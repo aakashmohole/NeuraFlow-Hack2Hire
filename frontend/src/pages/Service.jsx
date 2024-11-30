@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import ServiceCard from "../components/custom/Services/ServiceCard"
 
 
@@ -65,6 +66,81 @@ const Service = () => {
   ]
 
 
+=======
+import ServiceCard from "../components/custom/Services/ServiceCard";
+
+const Service = () => {
+  const serviceData1 = [
+    {
+      id: 1,
+      title: " 1. Set Your Hourly Rate",
+      description:
+        "Define your hourly rate for transparency and consistency with clients.",
+    },
+    {
+      id: 2,
+      title: " 2. Create Service Packages",
+      description:
+        "Set up different service packages (basic, standard, premium) to give clients options.",
+    },
+    {
+      id: 3,
+      title: "3. Add Project Highlights",
+      description:
+        "Showcase your previous work to demonstrate your skills and style.",
+    },
+  ];
+
+  const serviceData2 = [
+    {
+      title: "Attract New Clients",
+      description:
+        "Create a professional display that brings clients directly to you.",
+    },
+    {
+      title: "Boost Your Credibility",
+      description:
+        "Establish trust by offering transparent services and pricing.",
+    },
+    {
+      title: "Organize Your Offerings",
+      description:
+        "Keep your services, packages, and rates organized in one place.",
+    },
+  ];
+
+  const serviceData3 = [
+    {
+      title: "Skill Showcase",
+      description: "List your main skills and areas of expertise.",
+    },
+    {
+      title: "Project Portfolio",
+      description:
+        "Highlight your best projects with descriptions, images, and links.",
+    },
+    {
+      title: "Custom Packages",
+      description:
+        " Define different packages that cater to varying client needs.",
+    },
+    {
+      title: "Pricing Tiers",
+      description:
+        " Offer competitive rates to attract clients with various budgets.",
+    },
+    {
+      title: "Client Testimonials",
+      description:
+        "Showcase positive feedback from past clients to build credibility.",
+    },
+    {
+      title: "Client Testimonials",
+      description:
+        "Showcase positive feedback from past clients to build credibility.",
+    },
+  ];
+>>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
 
   return (
     <>
@@ -92,11 +168,21 @@ const Service = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+<<<<<<< HEAD
           {
             serviceData1.map((data)=> 
               <ServiceCard key={data.id} title={data.title} description={data.description}/>
             )
           }
+=======
+          {serviceData1.map((data) => (
+            <ServiceCard
+              key={data.id}
+              title={data.title}
+              description={data.description}
+            />
+          ))}
+>>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
         </div>
       </section>
       <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
@@ -129,12 +215,23 @@ const Service = () => {
           </p>
         </div>
         <div className="flex flex-col md:flex-row md:space-x-8 space-y-6 md:space-y-0">
+<<<<<<< HEAD
           {
             serviceData2.map((data,index)=> 
             
               <ServiceCard title={data.title} description={data.description} key={index} className="bg-black"/>
             )
           }
+=======
+          {serviceData2.map((data, index) => (
+            <ServiceCard
+              title={data.title}
+              description={data.description}
+              key={index}
+              className="bg-black"
+            />
+          ))}
+>>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
         </div>
       </section>
 
@@ -149,6 +246,7 @@ const Service = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<<<<<<< HEAD
          {
            serviceData3.map((data,index)=> 
             <ServiceCard title={data.title} description={data.description} key={index}/>
@@ -158,6 +256,18 @@ const Service = () => {
       </section>
 
      
+=======
+          {serviceData3.map((data, index) => (
+            <ServiceCard
+              title={data.title}
+              description={data.description}
+              key={index}
+            />
+          ))}
+        </div>
+      </section>
+
+>>>>>>> 224b4b7b1b26f33d81c01ca0c5b026cc43010329
       <section className="px-8 py-16 lg:px-32 bg-slate-950 text-white">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-fuchsia-500">
