@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from utils.verify_token import verify_token
-from models.service_model import create_service, get_all_services, service_images
+from models.service_model import create_service, get_all_services, service_images,get_service_id
 from models.profile_update_model import get_user_from_db
 
 import traceback
@@ -57,4 +57,19 @@ def add_services_controller():
     
 def get_all_services_controller():
     services = get_all_services()
-    return jsonify(services), 200
+    return jsonify(services), 200   
+
+def get_service_by_id(service_id):
+    if not service_id:
+        return jsonify({"error": "Unautheized request"}),401
+
+    service = get_service_id(service_id)
+
+    if not service:
+        return jsonify({"error":"Failed to fetch the service"})
+
+    return jsonify(service)
+
+
+    
+

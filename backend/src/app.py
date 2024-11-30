@@ -8,7 +8,7 @@ from controller.client_ProjectsController import create_client_project, get_clie
 from controller.freelancer_ApplicationsController import apply_for_work_controller
 from controller.event_RegistrationController import register_event, get_all_registration_detailsController
 from controller.recommandationController import get_user_recommendations
-from controller.servicesController import add_services_controller, get_all_services
+from controller.servicesController import add_services_controller, get_all_services,get_service_by_id
 from controller.channel_CreateController import channel_registrationController, get_channel_detailsController,get_channel_details_by_idController,get_all_channels
 from controller.join_memberController import join_community,get_all_members
 from controller.community_postController import post_in_channel, like_postController, add_commentController, get_post_detailsController,get_post_like_comment_detailsController
@@ -136,6 +136,15 @@ def get_all_services_route():
     Route to fetch all services
     """
     return get_all_services()
+
+@app.route('/get_service/<int:service_id>', methods=['GET'])
+def get_service_route(service_id):
+    """
+    Route to fetch all services
+    """
+    return get_service_by_id(service_id)
+
+
 
 # Channel management routes
 @app.route('/channel_registration', methods=['POST'])
