@@ -1,26 +1,10 @@
-
-# flask
-# flask_cors
-# Werkzeug
-# PyJWT
-# psycopg2
-# python-dotenv
-# cloudinary
-# pandas
-# numpy
-# scikit-learn
-
-flask
-flask_cors
-traceback
-Werkzeug
-PyJWT
-psycopg2
-python-dotenv
-logging
-cloudinary
-pandas
-json
-numpy 
-scikit-learn
-pickle
+Flask==2.2.3
+Flask-Cors==3.1.1
+Werkzeug==2.2.3
+PyJWT==2.6.0
+psycopg2==2.9.3
+python-dotenv==0.21.0
+cloudinary==1.27.0
+pandas==1.5.3
+numpy==1.23.4
+scikit-learn==1.0.2
