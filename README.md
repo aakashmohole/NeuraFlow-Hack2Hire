@@ -131,30 +131,7 @@ Open your favorite Terminal and run these commands:
 
 ### **Collaboration Tool:** 
 - We are developing an advanced collaboration tool to streamline teamwork and enhance productivity.
-
-## 📆 **Development Timeline**
-
-### **Week 1:**  
-- Define project goals and requirements.  
-- Collect datasets for the recommendation system.  
-- Plan key features and finalize project scope.  
-
-### **Week 2:**  
-- Design wireframes and prototypes.  
-- Develop backend architecture and database schema.  
-- Start building machine learning models.  
-
-### **Week 3:**  
-- Backend and frontend development.  
-- Implement core features (project evaluation, profile analysis).  
-- Develop and test the recommendation module.  
-
-### **Week 4:**  
-- Finalize frontend and backend development.  
-- Implement user feedback mechanisms.  
-- Conduct final testing and refine features.  
-
----
+  
 
 ## 👥 **Team Members**
 - **Aakash Mohole** - aakashmohole@gmail.com  
