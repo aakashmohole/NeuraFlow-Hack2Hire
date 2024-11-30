@@ -72,8 +72,7 @@
 - **PostgreSQL:** Powerful relational database for data management.  
 
 ### **Machine Learning**
-- **TensorFlow / PyTorch:** For building and deploying recommendation models.  
-- **NLP:** Enhances community forums and search functionalities.  
+- **K-Means Clusturing:** For building and recommendation model.    
 
 ### **API Testing**
 - **Postman:** For developing and testing RESTful APIs.  
