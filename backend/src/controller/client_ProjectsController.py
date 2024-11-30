@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from utils.verify_token import verify_token
-from models.client_project_model import create_project, get_client_projects, get_client_project_by_id, get_all_client_projects
+from models.client_project_model import create_project, get_client_projects, get_client_project_by_id, get_all_client_projects,get_user_info
 import os 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -76,9 +76,17 @@ def get_client_project_by_id__controller(project_id):
     project_details = get_client_project_by_id(project_id)
     if not project_details:
         return jsonify({"error": "No project details found"}), 500
+
+    clientID = project_details[0].get('clientID')
+
+    user_info = get_user_info(clientID,project_id)
+
+    if not user_info:
+        return jsonify({"error": "Failed to get user details"}), 500
     
-    return jsonify({"project_details": project_details}), 200
+    
+    return jsonify({"project_details": project_details,"user_details" : user_info}), 200
 
-
+    
 if __name__ == '__main__':
     app.run(debug=True)

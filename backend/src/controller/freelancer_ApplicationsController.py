@@ -13,9 +13,13 @@ CORS(app, supports_credentials=True)  # Enable CORS for all routes
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")  # Replace with a strong secret key
 
 
-def apply_for_work_controller():
+def apply_for_work_controller(project_id):
     # Verify the token and extract the user_id
     user_id = verify_token()
+
+    if not user_id or not project_id:
+        return jsonify({"error" : "Acces token or project is missing"})
+
     # Get data from the request
     data = request.get_json()
     cover_letter = data.get('cover_letter')
@@ -25,7 +29,7 @@ def apply_for_work_controller():
         return jsonify({"error": "Missing required fields"}), 400
 
     # Call the model function to apply for work
-    result, status_code = apply_for_work(user_id, cover_letter, time_to_complete)
+    result, status_code = apply_for_work(user_id, cover_letter, time_to_complete,project_id)
 
     return jsonify(result), status_code
 

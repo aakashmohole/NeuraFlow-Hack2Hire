@@ -61,9 +61,9 @@ def get_all_client_projects_controller_route():
 def get_client_project_by_id_route(project_id):
     return get_client_project_by_id__controller(project_id)
 
-@app.route('/apply_for_work', methods=['POST'])
-def apply_for_work_controller_route():
-    return apply_for_work_controller()
+@app.route('/apply_for_work/<int:project_id>', methods=['POST'])
+def apply_for_work_controller_route(project_id):
+    return apply_for_work_controller(project_id)
 
 
 @app.route('/event_registration', methods=['POST'])
@@ -112,11 +112,11 @@ def add_commentController_route(post_id):
     return add_commentController(post_id)
 
 # get post_details rout
-@app.route('/get_post_details/<int:post_id>', methods=['POST'])
+@app.route('/get_post_details/<int:post_id>', methods=['GET'])
 def get_post_detailsController_route(post_id):
     return get_post_detailsController(post_id)
 
-@app.route('/get_post_like_comment_details/<int:post_id>', methods=['POST'])
+@app.route('/get_post_like_comment_details/<int:post_id>', methods=['GET'])
 def get_post_like_comment_detailsController_route(post_id):
     return get_post_like_comment_detailsController(post_id)
 

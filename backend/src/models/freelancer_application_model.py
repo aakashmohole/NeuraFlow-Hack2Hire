@@ -1,10 +1,13 @@
 from utils.connection import get_db_connection
 
 # Function to apply for work and handle database logic
-def apply_for_work(user_id, cover_letter, time_to_complete):
+def apply_for_work(user_id, cover_letter, time_to_complete,project_id):
     
     if not isinstance(user_id, int):
         return {"error": "Invalid user ID provided"}, 400
+
+    if not isinstance(project_id, int):
+        return {"error": "Invalid project ID provided"}, 400
 
     conn = get_db_connection()
     if not conn:
@@ -12,8 +15,6 @@ def apply_for_work(user_id, cover_letter, time_to_complete):
 
     try:
         cursor = conn.cursor()
-
-        # Decrease the 'connects' count by 1
         cursor.execute("""
             UPDATE users
             SET connects = connects - 5
@@ -30,10 +31,10 @@ def apply_for_work(user_id, cover_letter, time_to_complete):
 
         # Insert the application details into freelancerApplications
         cursor.execute("""
-            INSERT INTO freelancerApplications (user_id, cover_letter, time_to_complete)
-            VALUES (%s, %s, %s)
+            INSERT INTO freelancerApplications (user_id, cover_letter, time_to_complete,project_id)
+            VALUES (%s, %s, %s,%s)
             RETURNING application_id;
-        """, (user_id, cover_letter, time_to_complete))
+        """, (user_id, cover_letter, time_to_complete,project_id))
 
         application_id = cursor.fetchone()[0]
         conn.commit()
@@ -41,6 +42,7 @@ def apply_for_work(user_id, cover_letter, time_to_complete):
         return {
             "message": "Application submitted successfully",
             "application_id": application_id,
+            "project_id" : project_id,
             "remaining_connects": remaining_connects
         }, 201
 
