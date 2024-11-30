@@ -1,0 +1,15 @@
+os-sys
+flask
+flask_cors
+traceback
+Werkzeug
+PyJWT
+psycopg2
+python-dotenv
+logging
+cloudinary
+pandas
+json
+numpy 
+scikit-learn
+pickle
