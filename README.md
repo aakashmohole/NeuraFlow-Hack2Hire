@@ -83,7 +83,7 @@
 ---
 
 ## 🔧 **Setup Instructions**
-
+## **Frontend Setup Instructions**
 Open your favorite Terminal and run these commands:
 
  ### 1) Clone the Repository
@@ -110,7 +110,7 @@ Open your favorite Terminal and run these commands:
 ```
 ---
 
-### **Backend Setup Instructions**
+## **Backend Setup Instructions**
 
 ### 1) Ensure Python is Installed  
 Make sure Python is installed on your system. You can download it from [Python's official website](https://www.python.org/downloads/).  
@@ -138,7 +138,7 @@ pip install -r requirements.txt
  python app.py
 ```
 
-### **Database Configuration**
+## **Database Configuration**
 
 ### 1) Update the `.env` File  
 Add the following environment variables to your `.env` file:  
